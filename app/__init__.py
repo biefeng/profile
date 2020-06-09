@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 from flask_migrate import Migrate
-from flask_wtf.csrf import CsrfProtect
+from flask_wtf.csrf import CSRFProtect
 from flask_moment import Moment
 from config import Config
 
@@ -20,7 +20,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     Config.init_app(app)
-    CsrfProtect(app)
+    CSRFProtect(app)
 
     db.init_app(app)
 
