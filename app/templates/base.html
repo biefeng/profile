@@ -55,6 +55,8 @@
                                     {% endfor %}
                                 </ul>
                             </li>
+                            {% else %}
+                            <li>{{ menu.name }}</li>
                         {% endif %}
                     {% endfor %}
                     {% for article_type in ArticleType.query.all() %}

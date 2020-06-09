@@ -2,7 +2,7 @@
 import hashlib
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask.ext.login import UserMixin
+from flask_login import UserMixin
 from . import db, login_manager
 
 article_types = {u'开发语言': ['Python', 'Java', 'JavaScript'],
@@ -300,7 +300,8 @@ class Comment(db.Model):
 class Article(db.Model):
     __tablename__ = 'articles'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(64), unique=True)
+    title = db.Column(db.String(256), unique=True)
+    ref_url = db.Column(db.String(256), unique=True)
     content = db.Column(db.Text)
     summary = db.Column(db.Text)
     create_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
