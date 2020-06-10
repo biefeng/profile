@@ -19,9 +19,10 @@
     <div class='header-top'>
         <div class="container">
             <h2  class="blog-title"><a href="{{ url_for('main.index') }}">{{ BlogInfo.query.first().title }}</a></h2>
-            <p class="lead signature">
+            <p class="lead signature hitokoto">
                 {{ BlogInfo.query.first().signature }}
             </p>
+            <script type="text/javascript" src="https://v1.hitokoto.cn/?encode=js"></script>
         </div>
     </div>
     <nav class="navbar navbar-{{ BlogInfo.query.first().navbar }}" role="navigation">
