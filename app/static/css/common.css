@@ -8,6 +8,9 @@ body {
 }
 .signature {
     padding-left: 0px;
+    color: #9d9da6;
+    font-weight: bolder;
+    font-size: 16px;
 }
 .content {
     min-height: 800px;

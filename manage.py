@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
+from flask_script import Manager, Shell
+
 from app import create_app, db
-from app.models import ArticleType, article_types, Source, \
+from app.models import ArticleType, Source, \
     Comment, Article, User, Menu, ArticleTypeSetting, BlogInfo, \
     Plugin, BlogView
 
@@ -12,23 +13,12 @@ migrate = Migrate(app, db)
 manager.add_command('db', MigrateCommand)
 
 
-# Global variables to jiajia2 environment:
-app.jinja_env.globals['ArticleType'] = ArticleType
-app.jinja_env.globals['article_types'] = article_types
-app.jinja_env.globals['Menu'] = Menu
-app.jinja_env.globals['BlogInfo'] = BlogInfo
-app.jinja_env.globals['Plugin'] = Plugin
-app.jinja_env.globals['Source'] = Source
-app.jinja_env.globals['Article'] = Article
-app.jinja_env.globals['Comment'] = Comment
-app.jinja_env.globals['BlogView'] = BlogView
-
-
 def make_shell_context():
-    return dict(db=db, ArticleType=ArticleType,Source=Source,
+    return dict(db=db, ArticleType=ArticleType, Source=Source,
                 Comment=Comment, Article=Article, User=User, Menu=Menu,
                 ArticleTypeSetting=ArticleTypeSetting, BlogInfo=BlogInfo,
                 Plugin=Plugin, BlogView=BlogView)
+
 
 manager.add_command("shell", Shell(make_context=make_shell_context))
 
