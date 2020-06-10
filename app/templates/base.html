@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
     <title>
         {% block title %}
-        {{ BlogInfo.query.first().title }}
+            {{ BlogInfo.query.first().title }}
         {% endblock %}
     </title>
     {% block stylesheet %}
@@ -18,11 +18,35 @@
 <header>
     <div class='header-top'>
         <div class="container">
-            <h2  class="blog-title"><a href="{{ url_for('main.index') }}">{{ BlogInfo.query.first().title }}</a></h2>
+            <h2 class="blog-title"><a href="{{ url_for('main.index') }}">{{ BlogInfo.query.first().title }}</a></h2>
             <p class="lead signature hitokoto">
                 {{ BlogInfo.query.first().signature }}
             </p>
-            <script type="text/javascript" src="https://v1.hitokoto.cn/?encode=js"></script>
+            <script src="{{ url_for('static', filename='js/jquery-2.2.1.min.js') }}"></script>
+            {#            <script type="text/javascript" src="https://v1.hitokoto.cn/?encode=js"></script>#}
+            <script type="text/javascript">
+                console.log("--------------------")
+                $.ajax({
+                    url: 'https://v1.hitokoto.cn/?encode=json&c=i&c=h&c=d',
+                    success: (res) => {
+                        console.log(res)
+                        let from = '', author = '', suffix = ''
+                        if (res['from_who']) {
+                            author = res['from_who']
+                        }
+                        if (res['from']) {
+                            from = `「${res['from']}」`
+                        }
+                        suffix = author + from
+                        if (from || author) {
+                            suffix = "—— " + suffix
+                        }
+                        let content = `『 ${res['hitokoto']}  』${suffix}`
+                        $(".hitokoto").text(content)
+                    }
+                })
+                console.log("--------------------")
+            </script>
         </div>
     </div>
     <nav class="navbar navbar-{{ BlogInfo.query.first().navbar }}" role="navigation">
@@ -56,7 +80,7 @@
                                     {% endfor %}
                                 </ul>
                             </li>
-                            {% else %}
+                        {% else %}
                             <li>{{ menu.name }}</li>
                         {% endif %}
                     {% endfor %}
@@ -124,7 +148,8 @@
                                         </p>
                                         <p>
                                             {% for source in Source.query.all() %}
-                                                <a href="{{ url_for('main.article_sources', id=source.id) }}">{{ source.name }}</a>：
+                                                <a href="{{ url_for('main.article_sources', id=source.id) }}">{{ source.name }}</a>
+                                                ：
                                                 <span class="badge">{{ source.articles.count() }}</span>
                                             {% endfor %}
                                         </p>
@@ -162,7 +187,6 @@
     </button>
 </div>
 {% block script %}
-    <script src="{{ url_for('static', filename='js/jquery-2.2.1.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/floatButton.js') }}"></script>
     {# csrfToken for Ajax   #}
