@@ -300,3 +300,23 @@ ul.comments .disabled-comment-admin-btn {
 .login-page {
     margin-top: 200px;
 }
+
+.form-control{
+    border-color: rgb(221, 221, 221)
+}
+
+#submit-comment-container{
+    width: 100%;
+}
+
+.comment-form-item-label{
+    margin:5px 0 ;
+}
+
+.comment-content{
+    min-height: 110px;
+}
+
+#name,#email{
+    width: 50%;
+}
