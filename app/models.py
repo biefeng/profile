@@ -409,3 +409,11 @@ class BlogView(db.Model):
         db.session.add(view)
         db.session.commit()
 
+
+class ChromePlugin(db.Model):
+    __tablename__ = 'chrome_plugin'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(256))
+    filename = db.Column(db.String(256))
+    create_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    update_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)

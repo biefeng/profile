@@ -23,29 +23,9 @@
                 {{ BlogInfo.query.first().signature }}
             </p>
             <script src="{{ url_for('static', filename='js/jquery-2.2.1.min.js') }}"></script>
-            {#            <script type="text/javascript" src="https://v1.hitokoto.cn/?encode=js"></script>#}
-            <script type="text/javascript">
-                $.ajax({
-                    url: 'https://v1.hitokoto.cn/?encode=json&c=i&c=h&c=d',
-                    success: (res) => {
-                        let from, author, suffix
-                        author = res['from_who']
-                        if (!author || author === 'null') {
-                            author = ''
-                        }
-                        from = `「${res['from']}」`
-                        if (!from || from === 'null') {
-                            from = ''
-                        }
-                        suffix = author + from
-                        if (from || author) {
-                            suffix = "—— " + suffix
-                        }
-                        let content = `『 ${res['hitokoto']}  』${suffix}`
-                        $(".hitokoto").text(content)
-                    }
-                })
-            </script>
+            {% block hitokoto %}
+
+            {% endblock %}
         </div>
     </div>
     <nav class="navbar navbar-{{ BlogInfo.query.first().navbar }}" role="navigation">
@@ -61,7 +41,8 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li class=""><a href="/"><span class="glyphicon glyphicon-home"> 首页</span></a></li>
-                    <li class=""><a href="/"><span class="glyphicon"> 插件</span></a></li>
+                    <li class=""><a href="/plugin-list"><span class="glyphicon">插件</span></a></li>
+                    <li class=""><a href="/"><span class="glyphicon">工具</span></a></li>
                     {% for menu in Menu.query.order_by(Menu.order.asc()).all() %}
                         {% if menu.types.count() %}
                             <li class="dropdown">

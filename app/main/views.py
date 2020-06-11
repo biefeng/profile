@@ -3,11 +3,11 @@ from flask import render_template, request, current_app, redirect, \
     url_for, flash
 from . import main
 from ..models import Article, ArticleType, article_types, Comment, \
-    Follow, User, Source, BlogView
+    Follow, User, Source, BlogView, ChromePlugin
 from .forms import CommentForm
 from .. import db
 
-SYMBOL_MAP = {'&#34;': '"', '&#39;': "'",}
+SYMBOL_MAP = {'&#34;': '"', '&#39;': "'", }
 
 
 @main.route('/')
@@ -91,3 +91,13 @@ def articleDetails(id):
                            form=form, endpoint='.articleDetails', id=article.id)
     # page=page, this is used to return the current page args to the
     # disable comment or enable comment endpoint to pass it to the articleDetails endpoint
+
+
+@main.route('/plugin-list', methods=['GET', 'POST'])
+def plugin_list():
+    page = request.args.get('page', 1, type=int)
+    pagination = ChromePlugin.query.order_by(ChromePlugin.create_time.desc()).paginate(
+        page, per_page=current_app.config['PLUGINS_PER_PAGE']
+    )
+    plugins = pagination.items
+    return render_template('plugin_list.html', pagination=pagination, plugins=plugins)
