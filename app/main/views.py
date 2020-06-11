@@ -1,11 +1,14 @@
 # coding:utf-8
+import HTMLParser
+
 from flask import render_template, request, current_app, redirect, \
     url_for, flash
+
 from . import main
-from ..models import Article, ArticleType, article_types, Comment, \
-    Follow, User, Source, BlogView, ChromePlugin
 from .forms import CommentForm
 from .. import db
+from ..models import Article, ArticleType, Comment, \
+    Follow, User, Source, BlogView, ChromePlugin
 
 SYMBOL_MAP = {'&#34;': '"', '&#39;': "'", }
 
@@ -86,6 +89,9 @@ def articleDetails(id):
         error_out=False)
     comments = pagination.items
     article.add_view(article, db)
+
+    # 反转义
+    article.content = HTMLParser.HTMLParser().unescape(article.content)
     return render_template('article_detials.html', User=User, article=article,
                            comments=comments, pagination=pagination, page=page,
                            form=form, endpoint='.articleDetails', id=article.id)
