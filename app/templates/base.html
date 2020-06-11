@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
     <title>
         {% block title %}
-        {{ BlogInfo.query.first().title }}
+            {{ BlogInfo.query.first().title }}
         {% endblock %}
     </title>
     {% block stylesheet %}
@@ -18,11 +18,14 @@
 <header>
     <div class='header-top'>
         <div class="container">
-            <h2  class="blog-title"><a href="{{ url_for('main.index') }}">{{ BlogInfo.query.first().title }}</a></h2>
+            <h2 class="blog-title"><a href="{{ url_for('main.index') }}">{{ BlogInfo.query.first().title }}</a></h2>
             <p class="lead signature hitokoto">
                 {{ BlogInfo.query.first().signature }}
             </p>
-            <script type="text/javascript" src="https://v1.hitokoto.cn/?encode=js"></script>
+            <script src="{{ url_for('static', filename='js/jquery-2.2.1.min.js') }}"></script>
+            {% block hitokoto %}
+
+            {% endblock %}
         </div>
     </div>
     <nav class="navbar navbar-{{ BlogInfo.query.first().navbar }}" role="navigation">
@@ -38,6 +41,8 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li class=""><a href="/"><span class="glyphicon glyphicon-home"> 首页</span></a></li>
+                    <li class=""><a href="/plugin-list"><span class="glyphicon">插件</span></a></li>
+                    <li class=""><a href="/"><span class="glyphicon">工具</span></a></li>
                     {% for menu in Menu.query.order_by(Menu.order.asc()).all() %}
                         {% if menu.types.count() %}
                             <li class="dropdown">
@@ -56,7 +61,7 @@
                                     {% endfor %}
                                 </ul>
                             </li>
-                            {% else %}
+                        {% else %}
                             <li>{{ menu.name }}</li>
                         {% endif %}
                     {% endfor %}
@@ -124,7 +129,8 @@
                                         </p>
                                         <p>
                                             {% for source in Source.query.all() %}
-                                                <a href="{{ url_for('main.article_sources', id=source.id) }}">{{ source.name }}</a>：
+                                                <a href="{{ url_for('main.article_sources', id=source.id) }}">{{ source.name }}</a>
+                                                ：
                                                 <span class="badge">{{ source.articles.count() }}</span>
                                             {% endfor %}
                                         </p>
@@ -138,7 +144,7 @@
         </div>
     </div>
 {% endblock %}
-<div class="footer">
+{#<div class="footer">
     <p class="footer-content">
         @2016
         <a href="#">Blog_mini</a>
@@ -149,7 +155,7 @@
         </a>
         {% endif %}
     </p>
-</div>
+</div>#}
 <div class="btn-group-vertical floatButton">
     <button id="goTop" class="btn btn-default" title="去顶部" type="button">
         <span class="glyphicon glyphicon-arrow-up"></span>
@@ -162,7 +168,6 @@
     </button>
 </div>
 {% block script %}
-    <script src="{{ url_for('static', filename='js/jquery-2.2.1.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/floatButton.js') }}"></script>
     {# csrfToken for Ajax   #}

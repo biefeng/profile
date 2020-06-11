@@ -1,16 +1,17 @@
-#coding: utf-8
+# coding: utf-8
 import hashlib
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-from . import db, login_manager
+from shard import login_manager
+from shard import db
 
 article_types = {u'开发语言': ['Python', 'Java', 'JavaScript'],
                  'Linux': [u'Linux成长之路', u'Linux运维实战', 'CentOS', 'Ubuntu'],
                  u'网络技术': [u'思科网络技术', u'其它'],
                  u'数据库': ['MySQL', 'Redis'],
-                 u'爱生活，爱自己': [u'生活那些事', u'学校那些事',u'感情那些事'],
-                 u'Web开发': ['Flask', 'Django'],}
+                 u'爱生活，爱自己': [u'生活那些事', u'学校那些事', u'感情那些事'],
+                 u'Web开发': ['Flask', 'Django'], }
 
 
 class User(UserMixin, db.Model):
@@ -41,7 +42,7 @@ class User(UserMixin, db.Model):
         super(User, self).__init__(**kwargs)
         if self.email is not None and self.avatar_hash is None:
             self.avatar_hash = hashlib.md5(
-                    self.email.encode('utf-8')).hexdigest()
+                self.email.encode('utf-8')).hexdigest()
 
     def gravatar(self, size=40, default='identicon', rating='g'):
         # if request.is_secure:
@@ -169,6 +170,7 @@ class ArticleType(db.Model):
             return self.setting.hide
         else:
             return False
+
     # if the articleType does not have setting,
     # its is_hie and is_protected property will be False.
 
@@ -201,9 +203,9 @@ class Source(db.Model):
 class Follow(db.Model):
     __tablename__ = 'follows'
     follower_id = db.Column(db.Integer, db.ForeignKey('comments.id'),
-                           primary_key=True)
+                            primary_key=True)
     followed_id = db.Column(db.Integer, db.ForeignKey('comments.id'),
-                         primary_key=True)
+                            primary_key=True)
 
 
 class Comment(db.Model):
@@ -225,16 +227,16 @@ class Comment(db.Model):
                                lazy='dynamic',
                                cascade='all, delete-orphan')
     followers = db.relationship('Follow',
-                               foreign_keys=[Follow.followed_id],
-                               backref=db.backref('followed', lazy='joined'),
-                               lazy='dynamic',
-                               cascade='all, delete-orphan')
+                                foreign_keys=[Follow.followed_id],
+                                backref=db.backref('followed', lazy='joined'),
+                                lazy='dynamic',
+                                cascade='all, delete-orphan')
 
     def __init__(self, **kwargs):
         super(Comment, self).__init__(**kwargs)
         if self.author_email is not None and self.avatar_hash is None:
             self.avatar_hash = hashlib.md5(
-                    self.author_email.encode('utf-8')).hexdigest()
+                self.author_email.encode('utf-8')).hexdigest()
 
     def gravatar(self, size=40, default='identicon', rating='g'):
         # if request.is_secure:
@@ -291,11 +293,13 @@ class Comment(db.Model):
             return False
         else:
             return True
+
     # to confirm whether the comment is a reply or not
 
     def followed_name(self):
         if self.is_reply():
             return self.followed.first().followed.author_name
+
 
 class Article(db.Model):
     __tablename__ = 'articles'
@@ -374,7 +378,7 @@ class Plugin(db.Model):
         plugin = Plugin(title=u'博客统计',
                         note=u'系统插件',
                         content='system_plugin',
-			order=1)
+                        order=1)
         db.session.add(plugin)
         db.session.commit()
 
@@ -404,3 +408,12 @@ class BlogView(db.Model):
         view.num_of_view += 1
         db.session.add(view)
         db.session.commit()
+
+
+class ChromePlugin(db.Model):
+    __tablename__ = 'chrome_plugin'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(256))
+    filename = db.Column(db.String(256))
+    create_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    update_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
