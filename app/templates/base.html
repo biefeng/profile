@@ -9,9 +9,9 @@
             {{ BlogInfo.query.first().title }}
         {% endblock %}
     </title>
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/common.css') }}" rel="stylesheet">
     {% block stylesheet %}
-        <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
-        <link href="{{ url_for('static', filename='css/common.css') }}" rel="stylesheet">
     {% endblock %}
 </head>
 <body>
@@ -61,7 +61,7 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li class=""><a href="/"><span class="glyphicon glyphicon-home"> 首页</span></a></li>
-                    <li class=""><a href="/plugin-list"><span class="glyphicon">插件</span></a></li>
+                    <li class=""><a href="/chrome-plugin/list"><span class="glyphicon">Chrome插件</span></a></li>
                     <li class=""><a href="/"><span class="glyphicon">工具</span></a></li>
                     {% for menu in Menu.query.order_by(Menu.order.asc()).all() %}
                         {% if menu.types.count() %}
@@ -187,22 +187,23 @@
         <span class="glyphicon glyphicon-arrow-down"></span>
     </button>
 </div>
-{% block script %}
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/floatButton.js') }}"></script>
-    {# csrfToken for Ajax   #}
-    <script>
-        var csrfToken = $('meta[name="csrf-token"]').attr('content');
-        $.ajaxSetup({
-            beforeSend: function (xhr, settings) {
-                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type)) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken)
-                }
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/floatButton.js') }}"></script>
+{# csrfToken for Ajax   #}
+<script>
+    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type)) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken)
             }
-        })
-    </script>
-    {{ moment.include_moment() }}
-    {{ moment.lang('zh-cn') }}
+        }
+    })
+</script>
+{{ moment.include_moment() }}
+{{ moment.lang('zh-cn') }}
+{% block script %}
+
 {% endblock %}
 </body>
 </html>

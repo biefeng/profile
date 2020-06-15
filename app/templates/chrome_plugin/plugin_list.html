@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% import "_macros.html" as macros %}
+{% block stylesheet %}
+    <link href="{{ url_for('static', filename='css/plugin_list.css') }}" rel="stylesheet"/>
+{% endblock %}
+
+
+{% block content %}
+    <div class="plugin-list-container">
+        {% for plugin in plugins %}
+            <a href="{{ url_for('chrome_plugin.plugin_detail',id=plugin.id) }}">
+                <div class="plugin-list-item">
+                    <img aria-hidden="true"
+                         src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1591820328299&di=89f08c993d55e875eab6cd37b732856f&imgtype=0&src=http%3A%2F%2Fpic.qqtn.com%2Fup%2F2017-8%2F201708241025487061949.png"
+                         class="plugin-list-item-cover-img">
+                    <div class="plugin-list-item-description">
+                        {{ plugin.short_desc }}
+                    </div>
+                    <div class="plugin-list-item-info">
+                        {{ plugin.name }}
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+    <div class="pagination">
+        {% if endpoint == '.index' %}
+            {{ macros.pagination_widget(pagination, endpoint) }}
+        {% else %}
+            {{ macros.pagination_widget(pagination, endpoint, id=id) }}
+        {% endif %}
+    </div>
+{% endblock %}

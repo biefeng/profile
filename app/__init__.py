@@ -34,6 +34,10 @@ def create_app():
 
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
+
+    from .chrome_plugin import chrome_plugin as chrome_plugin_blueprint
+    app.register_blueprint(chrome_plugin_blueprint, url_prefix='/chrome-plugin')
+
     Migrate(app, db)
     return app
 

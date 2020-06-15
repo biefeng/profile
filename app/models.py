@@ -1,10 +1,12 @@
 # coding: utf-8
 import hashlib
 from datetime import datetime
-from werkzeug.security import generate_password_hash, check_password_hash
+
 from flask_login import UserMixin
-from shard import login_manager
+from werkzeug.security import generate_password_hash, check_password_hash
+
 from shard import db
+from shard import login_manager
 
 article_types = {u'开发语言': ['Python', 'Java', 'JavaScript'],
                  'Linux': [u'Linux成长之路', u'Linux运维实战', 'CentOS', 'Ubuntu'],
@@ -414,6 +416,8 @@ class ChromePlugin(db.Model):
     __tablename__ = 'chrome_plugin'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(256))
+    short_desc = db.Column(db.String(256))
+    description = db.Column(db.Text)
     filename = db.Column(db.String(256))
     create_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     update_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)

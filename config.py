@@ -1,4 +1,5 @@
 import os
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -12,9 +13,10 @@ class Config():
     SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:Biefeng123!@106.13.83.252/blog_mini"
     ARTICLES_PER_PAGE = 10
     COMMENTS_PER_PAGE = 6
-    PLUGINS_PER_PAGE = 10
+    PLUGINS_PER_PAGE = 9
     SECRET_KEY = 'secret key to protect from csrf'
-    WTF_CSRF_SECRET_KEY = 'random key for form' # for csrf protection
+    WTF_CSRF_SECRET_KEY = 'random key for form'  # for csrf protection
+
     # Take good care of 'SECRET_KEY' and 'WTF_CSRF_SECRET_KEY', if you use the
     # bootstrap extension to create a form, it is Ok to use 'SECRET_KEY',
     # but when you use tha style like '{{ form.name.labey }}:{{ form.name() }}',

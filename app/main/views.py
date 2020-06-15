@@ -98,12 +98,3 @@ def articleDetails(id):
     # page=page, this is used to return the current page args to the
     # disable comment or enable comment endpoint to pass it to the articleDetails endpoint
 
-
-@main.route('/plugin-list', methods=['GET', 'POST'])
-def plugin_list():
-    page = request.args.get('page', 1, type=int)
-    pagination = ChromePlugin.query.order_by(ChromePlugin.create_time.desc()).paginate(
-        page, per_page=current_app.config['PLUGINS_PER_PAGE']
-    )
-    plugins = pagination.items
-    return render_template('plugin_list.html', pagination=pagination, plugins=plugins)
