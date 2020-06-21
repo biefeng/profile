@@ -5,14 +5,10 @@ from flask_moment import Moment
 from flask_wtf.csrf import CSRFProtect
 
 from app.models import ArticleType, article_types, Source, \
-    Comment, Article, User, Menu, ArticleTypeSetting, BlogInfo, \
+    Comment, Article, Menu, BlogInfo, \
     Plugin, BlogView
 from config import Config
 from shard import db, login_manager
-
-import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
 
 bootstrap = Bootstrap()
 moment = Moment()

@@ -1,5 +1,5 @@
 # coding:utf-8
-import HTMLParser
+from html.parser import HTMLParser
 
 from flask import render_template, request, current_app, redirect, \
     url_for, flash
@@ -91,7 +91,7 @@ def articleDetails(id):
     article.add_view(article, db)
 
     # 反转义
-    article.content = HTMLParser.HTMLParser().unescape(article.content)
+    article.content = HTMLParser().unescape(article.content)
     return render_template('article_detials.html', User=User, article=article,
                            comments=comments, pagination=pagination, page=page,
                            form=form, endpoint='.articleDetails', id=article.id)

@@ -1,4 +1,8 @@
 
+.plugin-list-container {
+    background-color: white;
+}
+
 .plugin-list-item {
     height: auto;
     display: inline-block;
@@ -53,6 +57,9 @@
 
 .plugin-list-item-info {
     margin-top: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .plugin-list-item-info-name {
@@ -67,4 +74,10 @@
     max-height: none;
     position: static;
     word-break: break-word;
+}
+
+/*plugin_detail.html*/
+.plugin-detail-container {
+    background-color: white;
+    padding: 10px;
 }

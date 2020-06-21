@@ -1,21 +1,20 @@
 # coding:utf-8
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
-from datetime import datetime
+
 import json
+from datetime import datetime
+
 from flask import render_template, redirect, flash, \
     url_for, request, current_app, jsonify
 from flask_login import login_required, current_user
+
 from . import admin
-from ..models import ArticleType, Source, Article, article_types, \
-    Comment, User, Follow, Menu, ArticleTypeSetting, BlogInfo, Plugin
 from .forms import SubmitArticlesForm, ManageArticlesForm, DeleteArticleForm, \
     DeleteArticlesForm, AdminCommentForm, DeleteCommentsForm, AddArticleTypeForm, \
     EditArticleTypeForm, AddArticleTypeNavForm, EditArticleNavTypeForm, SortArticleNavTypeForm, \
     CustomBlogInfoForm, AddBlogPluginForm, ChangePasswordForm, EditUserInfoForm
 from .. import db
+from ..models import ArticleType, Source, Article, Comment, User, Follow, Menu, ArticleTypeSetting, BlogInfo, Plugin
 
 
 @admin.route('/')
@@ -130,7 +129,7 @@ def manage_articles():
             source = Source.query.get_or_404(source_id)
             result = result.filter_by(source=source)
         pagination_search = result.paginate(
-                page, per_page=current_app.config['ARTICLES_PER_PAGE'], error_out=False)
+            page, per_page=current_app.config['ARTICLES_PER_PAGE'], error_out=False)
 
     if pagination_search != 0:
         pagination = pagination_search
@@ -138,8 +137,8 @@ def manage_articles():
     else:
         page = request.args.get('page', 1, type=int)
         pagination = Article.query.order_by(Article.create_time.desc()).paginate(
-                page, per_page=current_app.config['ARTICLES_PER_PAGE'],
-                error_out=False)
+            page, per_page=current_app.config['ARTICLES_PER_PAGE'],
+            error_out=False)
         articles = pagination.items
 
     return render_template('admin/manage_articles.html', Article=Article,
@@ -331,7 +330,7 @@ def delete_comments():
             db.session.rollback()
             flash(u'删除失败！', 'danger')
         else:
-            flash(u'成功删除%s条评论！' % count , 'success')
+            flash(u'成功删除%s条评论！' % count, 'success')
     if form2.errors:
         flash(u'删除失败！', 'danger')
 
@@ -343,7 +342,7 @@ def delete_comments():
 @login_required
 def manage_articleTypes():
     form = AddArticleTypeForm(menus=-1)
-    form2= EditArticleTypeForm()
+    form2 = EditArticleTypeForm()
 
     menus = Menu.return_menus()
     return_setting_hide = ArticleTypeSetting.return_setting_hide()
@@ -365,7 +364,7 @@ def manage_articleTypes():
             setting_hide = form.setting_hide.data
             menu = Menu.query.get(form.menus.data)
             if not menu:
-               menu = None
+                menu = None
             articleType = ArticleType(name=name, introduction=introduction, menu=menu,
                                       setting=ArticleTypeSetting(name=name))
             if setting_hide == 1:
@@ -389,6 +388,8 @@ def manage_articleTypes():
     return render_template('admin/manage_articleTypes.html', articleTypes=articleTypes,
                            pagination=pagination, endpoint='.manage_articleTypes',
                            form=form, form2=form2, page=page)
+
+
 # 提示，添加分类的验证表单也写在了上面，建议可以分开来写，这里只是提供一种方法，前面的也是如此
 # 虽然分开来写会多写一点代码，但这样的逻辑就更清晰了
 # 另外需要注意的是，两个验证表单写在同一个view当中会出现问题，所以建议还是分开来写
@@ -396,7 +397,7 @@ def manage_articleTypes():
 
 @admin.route('/manage-articletypes/edit-articleType', methods=['POST'])
 def edit_articleType():
-    form2= EditArticleTypeForm()
+    form2 = EditArticleTypeForm()
 
     menus = Menu.return_menus()
     setting_hide = ArticleTypeSetting.return_setting_hide()
@@ -413,7 +414,7 @@ def edit_articleType():
 
         if articleType.is_protected:
             if form2.name.data != articleType.name or \
-                            form2.introduction.data != articleType.introduction:
+                    form2.introduction.data != articleType.introduction:
                 flash(u'您只能修改系统默认分类的属性和所属导航！', 'danger')
             else:
                 menu = Menu.query.get(form2.menus.data)
@@ -428,13 +429,13 @@ def edit_articleType():
                 db.session.commit()
                 flash(u'修改系统默认分类成功！', 'success')
         elif ArticleType.query.filter_by(name=form2.name.data).first() \
-            and ArticleType.query.filter_by(name=form2.name.data).first().id != articleType_id:
-                flash(u'修改分类失败！该分类名称已经存在。', 'danger')
+                and ArticleType.query.filter_by(name=form2.name.data).first().id != articleType_id:
+            flash(u'修改分类失败！该分类名称已经存在。', 'danger')
         else:
             introduction = form2.introduction.data
             menu = Menu.query.get(form2.menus.data)
             if not menu:
-               menu = None
+                menu = None
             articleType = ArticleType.query.get_or_404(articleType_id)
             articleType.name = name
             articleType.introduction = introduction
@@ -442,7 +443,7 @@ def edit_articleType():
             if not articleType.setting:
                 articleType.setting = ArticleTypeSetting(name=articleType.name)
             if setting_hide == 1:
-                    articleType.setting.hide = True
+                articleType.setting.hide = True
             if setting_hide == 2:
                 articleType.setting.hide = False
 
@@ -518,7 +519,7 @@ def manage_articleTypes_nav():
             flash(u'添加导航失败！该导航名称已经存在。', 'danger')
         else:
             menu_count = Menu.query.count()
-            menu = Menu(name=name, order=menu_count+1)
+            menu = Menu(name=name, order=menu_count + 1)
             db.session.add(menu)
             db.session.commit()
             page = -1
@@ -528,8 +529,8 @@ def manage_articleTypes_nav():
         page = (Menu.query.count() - 1) // \
                current_app.config['COMMENTS_PER_PAGE'] + 1
     pagination = Menu.query.order_by(Menu.order.asc()).paginate(
-            page, per_page=current_app.config['COMMENTS_PER_PAGE'],
-            error_out=False)
+        page, per_page=current_app.config['COMMENTS_PER_PAGE'],
+        error_out=False)
     menus = pagination.items
     return render_template('admin/manage_articleTypes_nav.html', menus=menus,
                            pagination=pagination, endpoint='.manage_articleTypes_nav',
@@ -547,8 +548,8 @@ def edit_nav():
         name = form2.name.data
         nav_id = int(form2.nav_id.data)
         if Menu.query.filter_by(name=name).first() \
-            and Menu.query.filter_by(name=name).first().id != nav_id:
-                flash(u'修改导航失败！该导航名称已经存在。', 'danger')
+                and Menu.query.filter_by(name=name).first().id != nav_id:
+            flash(u'修改导航失败！该导航名称已经存在。', 'danger')
         else:
             nav = Menu.query.get_or_404(nav_id)
             nav.name = name
@@ -590,7 +591,7 @@ def nav_sort_up(id):
     page = request.args.get('page', 1, type=int)
 
     menu = Menu.query.get_or_404(id)
-    pre_menu = Menu.query.filter_by(order=menu.order-1).first()
+    pre_menu = Menu.query.filter_by(order=menu.order - 1).first()
     if pre_menu:
         (menu.order, pre_menu.order) = (pre_menu.order, menu.order)
         db.session.add(menu)
@@ -608,7 +609,7 @@ def nav_sort_down(id):
     page = request.args.get('page', 1, type=int)
 
     menu = Menu.query.get_or_404(id)
-    latter_menu = Menu.query.filter_by(order=menu.order+1).first()
+    latter_menu = Menu.query.filter_by(order=menu.order + 1).first()
     if latter_menu:
         (latter_menu.order, menu.order) = (menu.order, latter_menu.order)
         db.session.add(menu)
@@ -667,7 +668,7 @@ def get_blog_info():
             navbar = 2
         return jsonify({
             'title': blog.title,
-            'signature':blog.signature,
+            'signature': blog.signature,
             'navbar': navbar,
         })
 
@@ -678,8 +679,8 @@ def custom_blog_plugin():
     page = request.args.get('page', 1, type=int)
 
     pagination = Plugin.query.order_by(Plugin.order.asc()).paginate(
-            page, per_page=current_app.config['COMMENTS_PER_PAGE'],
-            error_out=False)
+        page, per_page=current_app.config['COMMENTS_PER_PAGE'],
+        error_out=False)
     plugins = pagination.items
 
     return render_template('admin/custom_blog_plugin.html',
@@ -701,7 +702,7 @@ def delete_plugin(id):
         db.session.rollback()
         flash(u'删除插件失败！', 'danger')
     else:
-        flash(u'删除插件成功！' ,'success')
+        flash(u'删除插件成功！', 'success')
     return redirect(url_for('admin.custom_blog_plugin', page=page))
 
 
@@ -711,7 +712,7 @@ def plugin_sort_up(id):
     page = request.args.get('page', 1, type=int)
 
     plugin = Plugin.query.get_or_404(id)
-    pre_plugin = Plugin.query.filter_by(order=plugin.order-1).first()
+    pre_plugin = Plugin.query.filter_by(order=plugin.order - 1).first()
     if pre_plugin:
         (plugin.order, pre_plugin.order) = (pre_plugin.order, plugin.order)
         db.session.add(plugin)
@@ -729,7 +730,7 @@ def plugin_sort_down(id):
     page = request.args.get('page', 1, type=int)
 
     plugin = Plugin.query.get_or_404(id)
-    latter_plugin = Plugin.query.filter_by(order=plugin.order+1).first()
+    latter_plugin = Plugin.query.filter_by(order=plugin.order + 1).first()
     if latter_plugin:
         (latter_plugin.order, plugin.order) = (plugin.order, latter_plugin.order)
         db.session.add(plugin)
@@ -785,7 +786,7 @@ def add_plugin():
             content = form.content.data
             plugin_count = Plugin.query.count()
             plugin = Plugin(title=title, note=note,
-                            content=content, order=plugin_count+1)
+                            content=content, order=plugin_count + 1)
             db.session.add(plugin)
             db.session.commit()
             flash(u'添加插件成功！', 'success')
@@ -868,5 +869,4 @@ def edit_user_info():
 @admin.route('/help')
 @login_required
 def help():
-
     return render_template('admin/help_page.html')
