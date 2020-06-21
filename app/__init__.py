@@ -10,6 +10,10 @@ from app.models import ArticleType, article_types, Source, \
 from config import Config
 from shard import db, login_manager
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 bootstrap = Bootstrap()
 moment = Moment()
 

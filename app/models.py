@@ -416,8 +416,10 @@ class ChromePlugin(db.Model):
     __tablename__ = 'chrome_plugin'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(256))
-    short_desc = db.Column(db.String(256))
+    short_desc = db.Column(db.Text)
     description = db.Column(db.Text)
-    filename = db.Column(db.String(256))
+    cover_image = db.Column(db.String(512))
+    image_group = db.Column(db.Text)
+    crx_url = db.Column(db.String(512))
     create_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     update_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
