@@ -1,7 +1,8 @@
 
-html{
+html {
     font-size: 16px;
 }
+
 /*CSS For common appearance*/
 body {
     background: #f8f9fa;
@@ -405,7 +406,7 @@ ul.comments .disabled-comment-admin-btn {
     margin: auto;
 }
 
-.form-sign-up .form-label-group{
+.form-sign-up .form-label-group {
     margin: 20px 0;
 }
 
@@ -416,6 +417,11 @@ ul.comments .disabled-comment-admin-btn {
 
 .form-control {
     border-color: rgb(221, 221, 221);
+}
+
+.login-err-msg-tip {
+    color: red;
+    font-size: .6rem;
 }
 
 #submit-comment-container {
