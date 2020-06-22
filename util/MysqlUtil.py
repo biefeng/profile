@@ -17,6 +17,27 @@ BASE_WIN_OUTPUT_PATH = 'd:/'
 profiles = {'dev': DEV, 'cateringProd': CATERING_PROD, "orderProd": ORDER_PROD}
 
 
+class Base():
+    def __init__(self, host, database, user, password):
+        self._connect = pymysql.connect(host=host, password=password, user=user, database=database)
+        self._cursor = self._connect.cursor(cursor=pymysql.cursors.DictCursor)
+        self.database = database
+        self.user = user
+        self.password = password
+
+    def select(self, sql):
+        self._cursor.execute(sql)
+        return self._cursor
+
+    def inert(self, sql):
+        self._cursor.execute(sql)
+        self._connect.commit()
+
+    def update(self, sql):
+        self._cursor.execute(sql)
+        self._connect.commit()
+
+
 class Export:
     def export_to_csv(self, **kwargs):
         print("--------args:" + str(kwargs))
@@ -151,13 +172,7 @@ class Export:
         self.export_to_csv(**profiles[props['profiles']])
 
 
-class Import():
-    def __init__(self, host, database, user, password):
-        self._connect = pymysql.connect(host=host, password=password, user=user, database=database)
-        self._cursor = self._connect.cursor(cursor=pymysql.cursors.Cursor)
-        self.database = database
-        self.user = user
-        self.password = password
+class Import(Base):
 
     def import_csv(self, fn, table_name, delimiter=" "):
         with open(fn, mode='r') as cf:
@@ -178,7 +193,21 @@ class Import():
                     print(tmp)
         self._connect.commit()
 
+    def up_date_chrome_plugin_cover_image(self):
+        cursor = self._connect.cursor(cursor=pymysql.cursors.DictCursor)
+        with open("D:\\Download\chromePlugin\\2020-6-20\\chrome_plugin_url.csv", mode="r", encoding='utf-8')as csv_file:
+            reader = DictReader(csv_file, delimiter=" ")
+            sql = "update chrome_plugin set plugin_id ='{0}' where name='{1}'"
+            for row in reader:
+                sql_format = sql.format(row['plugin_id'], row['name'])
+                try:
+                    cursor.execute(sql_format);
+                except Exception as e:
+                    print(sql_format)
+        self._connect.commit()
+
 
 if "__main__" == __name__:
     im = Import("baiduyun", "blog_mini", "root", "Biefeng123!")
-    im.import_csv("D:\\Download\chromePlugin\\2020-6-20\\chrome_plugin_url.csv", "chrome_plugin")
+    # im.import_csv("D:\\Download\chromePlugin\\2020-6-20\\chrome_plugin_url.csv", "chrome_plugin")
+    im.up_date_chrome_plugin_cover_image()

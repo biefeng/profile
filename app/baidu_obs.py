@@ -26,7 +26,7 @@ bos_client = BosClient(config)
 GENIOUS_BUCKET = 'genious'
 
 
-def md5_obj(fn):
+def md5_file(fn):
     buf_size = 8192
     md5 = hashlib.md5()
     with open(fn, mode='rb') as fp:
@@ -39,6 +39,12 @@ def md5_obj(fn):
         content_md5 = base64.standard_b64encode(md5.digest())
 
     return content_md5
+
+
+def md5_obj(bs):
+    md5 = hashlib.md5()
+    md5.update(bs)
+    return base64.standard_b64encode(md5.digest())
 
 
 if __name__ == '__main__':

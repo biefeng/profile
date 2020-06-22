@@ -5,8 +5,8 @@ from datetime import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from shard import db
-from shard import login_manager
+from app.shard import db
+from app.shard import login_manager
 
 article_types = {u'开发语言': ['Python', 'Java', 'JavaScript'],
                  'Linux': [u'Linux成长之路', u'Linux运维实战', 'CentOS', 'Ubuntu'],
@@ -415,6 +415,7 @@ class BlogView(db.Model):
 class ChromePlugin(db.Model):
     __tablename__ = 'chrome_plugin'
     id = db.Column(db.Integer, primary_key=True)
+    plugin_id = db.Column(db.String(128))
     name = db.Column(db.String(256))
     short_desc = db.Column(db.Text)
     description = db.Column(db.Text)

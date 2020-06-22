@@ -8,7 +8,8 @@ from app.models import ArticleType, article_types, Source, \
     Comment, Article, Menu, BlogInfo, \
     Plugin, BlogView
 from config import Config
-from shard import db, login_manager
+
+from app.shard import db, login_manager
 
 bootstrap = Bootstrap()
 moment = Moment()

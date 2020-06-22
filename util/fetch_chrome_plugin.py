@@ -5,13 +5,15 @@
 
 import csv
 import datetime
+import io
 import json
 import os
 
 import pymysql
 import requests
 
-from app.baidu_obs import bos_client, GENIOUS_BUCKET, md5_obj
+from app.baidu_obs import bos_client, GENIOUS_BUCKET, md5_file, md5_obj
+from util.MysqlUtil import Import
 
 login_info = {
     "login": "biefeng6@gmail.com",
@@ -21,12 +23,14 @@ login_info = {
 categories = ['collection/editors_picks_extensions', 'recommended_extensions']
 
 today = datetime.date.today()
-date_prefix = "{0}-{1}-{2}".format(today.year, today.month, 20)
+date_prefix = "{0}-{1}-{2}".format(today.year, today.month, today.day)
 chrome_data_dir = "D:\\Download\\chromePlugin\\{0}\\".format(date_prefix)
+if not os.path.exists(chrome_data_dir):
+    os.mkdir(chrome_data_dir)
 
 
 def fetch_plugin_info_into_file():
-    url = "https://chrome.google.com/webstore/ajax/item?hl=zh-CN&gl=JP&pv=20200420&mce=atf%2Cpii%2Crtr%2Crlb%2Cgtc%2Chcn%2Csvp%2Cwtd%2Chap%2Cnma%2Cdpb%2Cc3d%2Cncr%2Cctm%2Cac%2Chot%2Cmac%2Cepb%2Cfcf%2Crma%2Cpot%2Cevt&count=200&token=102%4016170274&category=extensions&sortBy=0&container=CHROME&features=5&_reqid=1476573&rt=j"
+    url = "https://chrome.google.com/webstore/ajax/item?hl=zh-CN&gl=JP&pv=20200420&mce=atf%2Cpii%2Crtr%2Crlb%2Cgtc%2Chcn%2Csvp%2Cwtd%2Chap%2Cnma%2Cdpb%2Cc3d%2Cncr%2Cctm%2Cac%2Chot%2Cmac%2Cepb%2Cfcf%2Crma%2Cpot%2Cevt&count=200&token=103%4016170274&category=extensions&sortBy=0&container=CHROME&features=5&_reqid=1476573&rt=j"
 
     payload = "login=biefeng6%40gmail.com&t=AHUv8HFZ99MAXKSyy3hinr6GzvdR3dYq4A%3A1592658971409&"
     headers = {
@@ -53,7 +57,7 @@ def fetch_plugin_info_into_file():
         writer = csv.DictWriter(sql_file, fieldnames=['id', 'name', 'short_desc', 'description', 'cover_image'], delimiter=r" ")
         writer.writeheader()
         for i in data[0][1][1]:
-            print(i[0] + ": " + i[1] + " " + i[6])
+            # print(i[0] + ": " + i[1] + " " + i[6])
             detail_url = "https://chrome.google.com/webstore/ajax/detail?hl=zh-CN&gl=SG&pv=20200420&mce=atf%2Cpii%2Crtr%2Crlb%2Cgtc%2Chcn%2Csvp%2Cwtd%2Chap%2Cnma%2Cdpb%2Cc3d%2Cncr%2Cctm%2Cac%2Chot%2Cmac%2Cepb%2Cfcf%2Crma&id={0}&container=CHROME&_reqid=177793&rt=j".format(
                 i[0])
             # print(detail_url)
@@ -61,15 +65,17 @@ def fetch_plugin_info_into_file():
             detail = json.loads(detail_res.text[4:])
             # print(detail[0][1][1][1])
             plugin_data = {
-                'id': i[0],
+                'plugin_id': i[0],
                 'name': i[1],
-                'cover_image': i[5],
+                'cover_image': i[len(i) - 10],
                 'short_desc': i[6],
                 'description': detail[0][1][1][1]
             }
             # sql = "insert into chrome_plugin (name,short_desc,description) values ('{0}','{1}','{2}');".format(i[1], i[6], detail[0][1][1][1])
-            writer.writerow(plugin_data)
-            download_crx(i[0], i[1].encode('utf-8'))
+            print("update chrome_plugin set cover_image='{0}' where plugin_id='{1}';".format(plugin_data['cover_image'], plugin_data['plugin_id']))
+            # print(plugin_data)
+            # writer.writerow(plugin_data)
+            # download_crx(i[0], i[1].encode('utf-8'))
             # break
 
 
@@ -119,7 +125,7 @@ def download_crx(id, name):
     with open(chrome_data_dir + id + ".crx", mode='wb') as crx_file:
         crx_file.write(content)
         crx_file.flush()
-    # upload_to_baidu_obs(name + ".crx", content)
+    # upload_crx_to_baidu_obs(name + ".crx", content)
 
 
 def upload_crx_to_baidu_obs():
@@ -148,7 +154,7 @@ def upload_crx_to_baidu_obs():
                     multipart_upload(fn, key)
                 else:
                     print("common upload {0}".format(upload_name))
-                    bos_client.put_object(GENIOUS_BUCKET, key, file_data, os.path.getsize(fn), md5_obj(fn))
+                    bos_client.put_object(GENIOUS_BUCKET, key, file_data, os.path.getsize(fn), md5_file(fn))
 
                 # print(url)
                 # break
@@ -187,7 +193,7 @@ def multipart_upload(fn, key):
 
         part_number += 1
     location = bos_client.complete_multipart_upload(GENIOUS_BUCKET, key, upload_id, part_list)
-    print (location.location)
+    print(location.location)
     return location
 
 
@@ -197,6 +203,28 @@ def list_uploaded_objects():
     for object in response.contents:
         keys.append(object.key)
     return keys
+
+
+def replace_image_url():
+    im = Import("baiduyun", "blog_mini", "root", "Biefeng123!")
+    select = im.select("select plugin_id ,cover_image from chrome_plugin")
+    sql = "update chrome_plugin set  cover_image='{0}' where plugin_id='{1}'"
+    index = 1
+    # print(len(select))
+    for row in select.fetchall():
+        print(index)
+        index += 1
+        img_res = requests.get(row['cover_image'])
+        content = img_res.content
+        fn = date_prefix + "/" + row['plugin_id'] + "_main.png"
+        key = "chrome/image/" + fn
+        # bos_client.put_object(GENIOUS_BUCKET, key, io.BytesIO(content), len(content), md5_obj(content))
+        url = bos_client.generate_pre_signed_url(bucket_name=GENIOUS_BUCKET, key=key, expiration_in_seconds=-1)
+        sql_format = sql.format(url.decode("utf-8"), row['plugin_id'])
+        try:
+            im.update(sql_format)
+        except Exception as e:
+            print(sql_format)
 
 
 def file_exists(fn):
@@ -211,7 +239,8 @@ def file_exists(fn):
 
 if __name__ == '__main__':
     # fetch_plugin_info_into_file()
-    upload_crx_to_baidu_obs()
+    # upload_crx_to_baidu_obs()
     # multipart_upload("D:\\Download\\chromePlugin\\2020-6-20\\emffkefkbkpkgpdeeooapgaicgmcbolj.crx", "chrome/crx/{0}/{1}.crx".format(date_prefix, "Wikiwand: Wikipedia Modernized"))
     # list_uploaded_objects()
     # file_exists("chrome/crx/2020-6-21/新的兰博基尼卡和壁纸收集.crx")
+    replace_image_url()

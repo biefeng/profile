@@ -1,6 +1,11 @@
 
 .plugin-list-container {
-    background-color: white;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding-right: 25px;
 }
 
 .plugin-list-item {
@@ -78,6 +83,12 @@
 
 /*plugin_detail.html*/
 .plugin-detail-container {
-    background-color: white;
+    /*background-color: white;*/
     padding: 10px;
+}
+
+#carouselExampleIndicators {
+    width: 480px;
+    margin: auto;
+    height: 300px;
 }
