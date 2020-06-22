@@ -1,7 +1,12 @@
+
+html{
+    font-size: 16px;
+}
 /*CSS For common appearance*/
 body {
-    background: white;
+    background: #f8f9fa;
     /*background: url('../images/background.jpg');*/
+
 }
 
 .blog-title a:link {
@@ -391,6 +396,22 @@ ul.comments .disabled-comment-admin-btn {
 /*CSS For login page*/
 .login-page {
     margin-top: 200px;
+}
+
+.form-sign-up {
+    width: 100%;
+    max-width: 420px;
+    padding: 15px;
+    margin: auto;
+}
+
+.form-sign-up .form-label-group{
+    margin: 20px 0;
+}
+
+.form-label-group > input {
+    height: 3.125rem;
+    padding: .75rem;
 }
 
 .form-control {
