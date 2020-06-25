@@ -1,6 +1,16 @@
 import os
+from logging.config import dictConfig
+
+import yaml
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+
+logging_config_file = os.path.join(os.path.dirname(__file__), 'logging.yaml')
+
+#  设置日志
+with open(logging_config_file, 'r') as f:
+    config = yaml.safe_load(f.read())
+    dictConfig(config)
 
 
 class Config():

@@ -7,7 +7,7 @@ from flask_wtf.csrf import CSRFProtect
 from app.models import ArticleType, article_types, Source, \
     Comment, Article, Menu, BlogInfo, \
     Plugin, BlogView
-from config import Config
+from config.config import Config
 
 from app.shard import db, login_manager
 

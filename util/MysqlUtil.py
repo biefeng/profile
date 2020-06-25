@@ -6,7 +6,7 @@
 import getopt
 import sys
 from csv import DictWriter, DictReader
-
+import tqdm
 import pymysql
 
 DEV = {'host': '10.128.62.33', 'user': 'root', 'password': 'root', 'database': 'jy_catering'}
@@ -15,6 +15,9 @@ ORDER_PROD = {'host': '172.16.1.154', 'user': 't11developer', 'password': 'JYwl@
 
 BASE_WIN_OUTPUT_PATH = 'd:/'
 profiles = {'dev': DEV, 'cateringProd': CATERING_PROD, "orderProd": ORDER_PROD}
+import logging
+
+LOGGER = logging.getLogger(__name__)
 
 
 class Base():
@@ -34,8 +37,12 @@ class Base():
         self._connect.commit()
 
     def update(self, sql):
-        self._cursor.execute(sql)
-        self._connect.commit()
+        try:
+            self._cursor.execute(sql)
+            self._connect.commit()
+        except Exception as e:
+            print("'{0}' failed".format(sql))
+            self._connect.rollback()
 
 
 class Export:
@@ -175,12 +182,12 @@ class Export:
 class Import(Base):
 
     def import_csv(self, fn, table_name, delimiter=" "):
-        with open(fn, mode='r') as cf:
+        with open(fn, mode='r', encoding="utf-8") as cf:
             reader = DictReader(cf, delimiter=delimiter)
             sql = "insert into {0}({1})values ({2});"
             for row in reader:
-                keys = row.keys()
-                keys.remove('id')
+                keys = list(row.keys())
+
                 colums = str(keys)[1:len(str(keys)) - 1].replace("'", "")
                 value_arr = []
                 for key in keys:
@@ -189,9 +196,42 @@ class Import(Base):
                 tmp = sql.format(table_name, colums, values)
                 try:
                     self._cursor.execute(tmp)
+                    self._connect.commit()
+
                 except Exception as e:
-                    print(tmp)
-        self._connect.commit()
+                    self._connect.rollback()
+                    LOGGER.error("{0} insert failed".format(tmp))
+
+    def import_csv_ignore_exists_record(self, fn, table_name, unique_keys, delimiter=" "):
+        """
+        导入数据，但忽略已存在记录
+        :param fn:
+        :param table_name:
+        :param delimiter:
+        :return:
+        """
+        sql = "INSERT INTO {table_name} ({columns}) SELECT {values} FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM {table_name} WHERE {duplicate_condition});"
+        with open(fn, mode='r', encoding="utf-8") as cf:
+            reader = DictReader(cf, delimiter=delimiter)
+            for row in reader:
+                keys = list(row.keys())
+                columns = str(keys)[1:len(str(keys)) - 1].replace("'", "")
+                value_arr = []
+                for key in keys:
+                    value_arr.append(row[key])
+                values = str(value_arr)[1:len(str(value_arr)) - 1]
+                dp = "{} ='{}'"
+                duplicate_conditions = []
+                for uk in unique_keys:
+                    duplicate_conditions.append(dp.format(uk, row[uk]))
+                sql_format = sql.format(table_name=table_name, columns=columns, values=values, duplicate_condition=" and ".join(duplicate_conditions))
+                try:
+                    self._cursor.execute(sql_format)
+                    LOGGER.debug(sql_format)
+                    self._connect.commit()
+                except Exception as e:
+                    self._connect.rollback()
+                    LOGGER.error("{0} insert failed".format(sql_format))
 
     def up_date_chrome_plugin_cover_image(self):
         cursor = self._connect.cursor(cursor=pymysql.cursors.DictCursor)
@@ -210,4 +250,5 @@ class Import(Base):
 if "__main__" == __name__:
     im = Import("baiduyun", "blog_mini", "root", "Biefeng123!")
     # im.import_csv("D:\\Download\chromePlugin\\2020-6-20\\chrome_plugin_url.csv", "chrome_plugin")
-    im.up_date_chrome_plugin_cover_image()
+    im.import_csv_ignore_exists_record("D:\\Download\chromePlugin\\2020-6-20\\chrome_plugin_url.csv", "chrome_plugin", ['plugin_id'])
+    # im.up_date_chrome_plugin_cover_image()
