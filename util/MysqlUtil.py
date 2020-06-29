@@ -205,6 +205,7 @@ class Import(Base):
     def import_csv_ignore_exists_record(self, fn, table_name, unique_keys, delimiter=" "):
         """
         导入数据，但忽略已存在记录
+        :param unique_keys: 用来判断记录已存在的，如果存在
         :param fn:
         :param table_name:
         :param delimiter:
@@ -225,6 +226,39 @@ class Import(Base):
                 for uk in unique_keys:
                     duplicate_conditions.append(dp.format(uk, row[uk]))
                 sql_format = sql.format(table_name=table_name, columns=columns, values=values, duplicate_condition=" and ".join(duplicate_conditions))
+                try:
+                    self._cursor.execute(sql_format)
+                    LOGGER.debug(sql_format)
+                    self._connect.commit()
+                except Exception as e:
+                    self._connect.rollback()
+                    LOGGER.error("{0} insert failed".format(sql_format))
+
+    def import_csv_update_exists_record(self, fn, table_name, exclude_keys, delimiter=" "):
+        """
+
+        :param exclude_keys:  如果出现键（主键/唯一索引）冲突，更新记录时需要忽略的列
+        :param fn: csv文件绝对路径
+        :param table_name: 表名
+        :param delimiter: 分割符  默认为空格
+        :return:
+        """
+        sql = "INSERT INTO {table_name} ({columns}) VALUES ({values}) ON DUPLICATE KEY UPDATE  {update_seg};"
+        with open(fn, mode='r', encoding="utf-8") as cf:
+            reader = DictReader(cf, delimiter=delimiter)
+            for row in reader:
+                keys = list(row.keys())
+                columns = str(keys)[1:len(str(keys)) - 1].replace("'", "")
+                value_arr = []
+                dp = "{} ='{}'"
+                duplicate_conditions = []
+                for key in keys:
+                    value_arr.append(row[key])
+                    if key not in exclude_keys:
+                        duplicate_conditions.append(dp.format(key, row[key]))
+
+                values = str(value_arr)[1:len(str(value_arr)) - 1]
+                sql_format = sql.format(table_name=table_name, columns=columns, values=values, update_seg=", ".join(duplicate_conditions))
                 try:
                     self._cursor.execute(sql_format)
                     LOGGER.debug(sql_format)

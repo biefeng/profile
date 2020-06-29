@@ -29,7 +29,7 @@ class BaiduBos:
         self._bucket = bucket
         self._bos_client = BosClient(_config)
 
-    def upload_file(self, fn, key, get_url=False, absent=True):
+    def upload_file(self, fn, key, get_url=False, absent=True, expiration_in_seconds=-1):
         """
         上传文件，如果文件超过25兆，将采用分块上传
         如果key已存在，则返回key的url
@@ -54,11 +54,11 @@ class BaiduBos:
                 else:
                     self._bos_client.put_object(self._bucket, key, f, fs, self.md5_file(fn))
         if get_url:
-            url = self._bos_client.generate_pre_signed_url(self._bucket, key)
+            url = self._bos_client.generate_pre_signed_url(self._bucket, key, expiration_in_seconds=expiration_in_seconds)
             return url.decode("utf-8")
         return None
 
-    def upload_bytes(self, byte_arr, key, get_url=False, absent=True):
+    def upload_bytes(self, byte_arr, key, get_url=False, absent=True, expiration_in_seconds=-1):
         """
         上传字节
         如果key已存在，则返回key的url
@@ -76,16 +76,9 @@ class BaiduBos:
         if not exists:
             self._bos_client.put_object(GENIOUS_BUCKET, key, io.BytesIO(byte_arr), len(byte_arr), self.md5_obj(byte_arr))
         if get_url:
-            url = self._bos_client.generate_pre_signed_url(self._bucket, key)
+            url = self._bos_client.generate_pre_signed_url(self._bucket, key, expiration_in_seconds=expiration_in_seconds)
             return url.decode("utf-8")
         return None
-
-    def upload_bytes_is_absent(self, byte_arr, key, get_url=False):
-        for obj in self._bos_client.list_all_objects(self._bucket):
-            if obj.key == key:
-                LOGGER.warning("the key has already existed, upload canceled")
-                return
-        return self.upload_bytes(byte_arr, key, get_url)
 
     def _multipart_upload(self, fn, key):
         """

@@ -17,6 +17,11 @@ from .. import db
 from ..models import ArticleType, Source, Article, Comment, User, Follow, Menu, ArticleTypeSetting, BlogInfo, Plugin
 
 
+@admin.route("/base")
+def base():
+    return render_template("admin/base.html")
+
+
 @admin.route('/')
 @login_required
 def manager():
