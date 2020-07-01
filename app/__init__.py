@@ -4,6 +4,8 @@ from flask_migrate import Migrate
 from flask_moment import Moment
 from flask_wtf.csrf import CSRFProtect
 
+from flask_sqlalchemy import get_debug_queries
+
 from app.models import ArticleType, article_types, Source, \
     Comment, Article, Menu, BlogInfo, \
     Plugin, BlogView
@@ -17,6 +19,19 @@ moment = Moment()
 
 def create_app():
     app = Flask(__name__)
+
+    @app.after_request
+    def after_request(response):
+        for query in get_debug_queries():
+            if query.duration >= app.config['FLASKY_DB_QUERY_TIMEOUT']:
+                print('#####Slow query:%s \nParameters:%s \nDuration:%fs\nContext:%s\n #####' %
+                      (query.statement, query.parameters, query.duration, query.context))  # 打印超时sql执行信息
+        return response
+
+    @app.teardown_request
+    def handle_teardown_request(ex):
+        pass
+
     app.config.from_object(Config)
     Config.init_app(app)
     CSRFProtect(app)

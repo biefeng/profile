@@ -220,7 +220,7 @@ class ChromePluginSpider():
 
 
 if __name__ == '__main__':
-    spider = ChromePluginSpider("https://chrome.google.com/webstore/ajax/item?hl=zh-CN&gl=JP&pv=20200420&mce=atf%2Cpii%2Crtr%2Crlb%2Cgtc%2Chcn%2Csvp%2Cwtd%2Chap%2Cnma%2Cdpb%2Car2%2Cc3d%2Cncr%2Cctm%2Cac%2Chot%2Cmac%2Cepb%2Cfcf%2Crma%2Cigb%2Cpot%2Cevt&count=200&token=321%4086704&category=extensions&sortBy=0&container=CHROME&features=5&_reqid=13636127&rt=j")
+    spider = ChromePluginSpider("https://chrome.google.com/webstore/ajax/item?hl=zh-CN&gl=JP&pv=20200420&mce=atf%2Cpii%2Crtr%2Crlb%2Cgtc%2Chcn%2Csvp%2Cwtd%2Chap%2Cnma%2Cdpb%2Car2%2Cc3d%2Cncr%2Cctm%2Cac%2Chot%2Cmac%2Cepb%2Cfcf%2Crma%2Cigb%2Cpot%2Cevt&count=200&token=28%405013323&category=extensions&sortBy=0&container=CHROME&features=5&_reqid=1906360&rt=j")
     # spider.get_plugins()
     # spider.upload_plugins()
     spider.import_into_mysql_ignore_exists()

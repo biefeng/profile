@@ -27,6 +27,10 @@ class Config():
     SECRET_KEY = 'secret key to protect from csrf'
     WTF_CSRF_SECRET_KEY = 'random key for form'  # for csrf protection
 
+    FLASKY_DB_QUERY_TIMEOUT = 1
+    SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+    SQLALCHEMY_RECORD_QUERIES = True
+
     # Take good care of 'SECRET_KEY' and 'WTF_CSRF_SECRET_KEY', if you use the
     # bootstrap extension to create a form, it is Ok to use 'SECRET_KEY',
     # but when you use tha style like '{{ form.name.labey }}:{{ form.name() }}',
