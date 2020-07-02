@@ -13,7 +13,6 @@
 <link rel="stylesheet" href="{{url_for('static',filename='mavon-editor/index.css')}}">
 <!--<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>-->
 <script type="text/javascript" src="{{ url_for('static',filename='mavon-editor/mavon-editor.js') }}"></script>
-
 <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.1/build/styles/railscasts.min.css">
 <script>
 
