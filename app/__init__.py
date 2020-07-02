@@ -63,6 +63,9 @@ def create_app():
     from .chrome_plugin import chrome_plugin as chrome_plugin_blueprint
     app.register_blueprint(chrome_plugin_blueprint, url_prefix='/chrome-plugin')
 
+    from .article import article as article_blueprint
+    app.register_blueprint(article_blueprint, url_prefix='/article')
+
     Migrate(app, db)
     return app
 
@@ -81,4 +84,3 @@ def init_jinja_ctx(app):
     app.jinja_env.globals['Article'] = Article
     app.jinja_env.globals['Comment'] = Comment
     app.jinja_env.globals['BlogView'] = BlogView
-

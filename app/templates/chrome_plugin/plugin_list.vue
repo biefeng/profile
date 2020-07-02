@@ -1,7 +1,7 @@
 {% raw %}
 <template id="chrome-plugin-list">
     <div>
-        <div role="grid" class="plugin-list-container">
+        <div role="grid" class="plugin-list-container" v-loading="loading">
             <a :href="'/chrome-plugin/detail/'+plugin.id" v-for="plugin in plugins">
                 <div class="plugin-list-item">
                     <img aria-hidden="true"
@@ -15,7 +15,7 @@
                     </div>
                 </div>
             </a>
-            <pagination :total="total" :size_change="sizeChange" :current_change="list" :page_size="20"></pagination>
+            <pagination v-if="plugins.length>0" :total="total" :size_change="sizeChange" :current_change="list" :page_size="20"></pagination>
         </div>
 
     </div>
@@ -64,11 +64,8 @@
 <style>
 
     .plugin-list-container {
-        margin: auto;
-        position: relative;
         padding-right: 25px;
         background-color: #f0f0f0;
-        width: 960px;
     }
 
     .plugin-list-item {

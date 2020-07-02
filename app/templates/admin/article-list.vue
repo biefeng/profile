@@ -136,7 +136,7 @@
                 if (pageNum != undefined) {
                     this.currentPage = pageNum
                 }
-                this.$http.get("/admin/list-articles", {
+                this.$http.get("/article/list-data", {
                     params: assign
                 }).then(res => {
                     this.tableData = res.data.list

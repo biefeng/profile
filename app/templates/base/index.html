@@ -14,7 +14,11 @@
                             text-color="#fff"
                             active-text-color="#ffd04b">
                         <el-menu-item index="1">Flask</el-menu-item>
-                        <el-menu-item index="2">博客</el-menu-item>
+                        <el-menu-item index="2">
+                            <a style="height: 100%;" href="/new">
+                                <span>博客</span>
+                            </a>
+                        </el-menu-item>
 
                         <el-menu-item index="3">
                             <a style="height: 100%;" href="/chrome-plugin/list">
@@ -26,7 +30,9 @@
                 </el-header>
                 <el-container>
                     <el-main>
-                        <main-content></main-content>
+                        <div class="main-content_container">
+                            <main-content></main-content>
+                        </div>
                     </el-main>
                 </el-container>
             </el-container>
@@ -63,6 +69,10 @@
             display: inline-block;
         }
 
+        h1,h2,h3,h4,h5,h6,span,p{
+            margin: 0px;
+        }
+
         #app {
             height: calc(100vh);
         }
@@ -77,6 +87,13 @@
 
         #app .el-scrollbar__wrap {
             overflow-x: hidden;
+        }
+
+        #app .main-content_container {
+            margin: auto;
+            position: relative;
+            width: 985px;
+            min-height: 100%;
         }
     </style>
 {% endblock %}

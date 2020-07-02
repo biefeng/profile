@@ -16,3 +16,32 @@
     padding: 0px;
 }
 
+.colorful-label {
+    padding: 1px 5px;
+    border-radius: 3px;
+    height: 1.1rem;
+    line-height: 1.1rem;
+    font-size: .75rem;
+    display: inline-block;
+}
+
+.colorful-label.primary {
+    background-color: #4c86db;
+}
+
+.colorful-label.warn {
+    background-color: #dbc641;
+}
+
+.colorful-label.info {
+    background-color: #aaaab0;
+}
+
+.colorful-label.success {
+    background-color: #1cdb37;
+}
+
+
+
+
+

@@ -1,28 +1,28 @@
 {%raw%}
 <template id="sample">
-    <div class="main-wrap-outer">
-        <div class="main-wrap-inner">
-            <div style="width: 440px;margin: auto">
-                <el-carousel>
-                    <el-carousel-item v-for="item in 4" :key="item">
-                        <img :src="plugin.cover_image"/>
-                    </el-carousel-item>
-                </el-carousel>
+
+    <div class="plugin-detail-container">
+        <div style="width: 440px;margin: auto">
+            <el-carousel>
+                <el-carousel-item v-for="item in 4" :key="item">
+                    <img :src="plugin.cover_image"/>
+                </el-carousel-item>
+            </el-carousel>
+        </div>
+        <div style="text-align: left;margin: 0px 50px 50px 50px;">
+            <div style="width: 100%;text-align: right;padding-right: 30px">
+                <a :href="plugin.crx_url">
+                    <el-button type="primary">下载</el-button>
+                </a>
             </div>
-            <div style="text-align: left;margin: 0px 50px 50px 50px;">
-                <div style="width: 100%;text-align: right;padding-right: 30px">
-                    <a :href="plugin.crx_url">
-                        <el-button type="primary">下载</el-button>
-                    </a>
-                </div>
-                <div style="white-space: pre-line;font-size: 16px;line-height: 24px;">
-                    <div style="">{{ plugin.name }}</div>
-                    <div style="font-weight: bolder;">{{ plugin.short_desc }}</div>
-                    <div style="font-weight: 300;">{{ plugin.description }}</div>
-                </div>
+            <div style="white-space: pre-line;font-size: 16px;line-height: 24px;">
+                <div style="">{{ plugin.name }}</div>
+                <div style="font-weight: bolder;">{{ plugin.short_desc }}</div>
+                <div style="font-weight: 300;">{{ plugin.description }}</div>
             </div>
         </div>
     </div>
+
 </template>
 {%endraw%}
 <script>
@@ -50,6 +50,8 @@
     });
 </script>
 <style>
-
+    .plugin-detail-container {
+        background-color: #f0f0f0;
+    }
 </style>
 
