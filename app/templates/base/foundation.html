@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <!-- import CSS -->
-    <link rel="stylesheet" href="{{ url_for('static',filename='element/index@2.13.2.css') }}">
-    <!-- import Vue before Element -->
-    <script type="text/javascript" src="{{ url_for("static",filename='vue/vue.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for("static",filename='axios/axios.js') }}"></script>
-    <script src="{{ url_for("static",filename='element/index@2.13.2.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for("static",filename='jsonpicklejs/jsonpickle.min.js') }}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-ui@2.13.2/lib/theme-chalk/index.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/element-ui@2.13.2/lib/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsonpickle@1.1.2/build/jsonpickle.min.js"></script>
+
     <script type="text/javascript">
         function unicodeToString(content) {
             var div = document.createElement('div');
