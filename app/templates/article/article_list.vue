@@ -2,37 +2,36 @@
 <template id="article_list">
 
     <div class="article-list_container" v-loading="loading">
-        <div class="article-list_item" v-for="article in articles">
-            <div>
-                <h3>
-                    <a>{{article.title}}</a>
-                </h3>
-            </div>
-            <div style="margin-bottom: 10px;">
-                <div style="display: inline-block;">
+        <a v-for="article in articles" style="display: block">
+            <div class="article-list_item">
+                <div class="article-title">{{article.title}}</div>
+
+                <div style="margin-bottom: 10px;">
+                    <div style="display: inline-block;">
                     <span class="colorful-label primary">
                         {{article.create_time}}
                     </span>
-                    <span class="colorful-label warn">
+                        <span class="colorful-label warn">
                         {{article.source}}
                     </span>
-                    <span class="colorful-label info">
+                        <span class="colorful-label info">
                         未分类
                     </span>
-                </div>
-                <div style="float: right;display: inline-block;">
-                    <span class="colorful-label success">
+                    </div>
+                    <div style="float: right;display: inline-block;">
+                    <span class="colorful-label hot">
                         浏览数{{article.num_of_view}}
                     </span>
-                    <span class="colorful-label warn">
+                        <span class="colorful-label warn">
                         评论189
                     </span>
+                    </div>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    {{ article.summary}}
                 </div>
             </div>
-            <div style="margin-bottom: 20px;">
-                {{ article.summary}}
-            </div>
-        </div>
+        </a>
     </div>
 </template>
 
@@ -80,9 +79,24 @@
     .article-list_item {
         margin: 0px 0px 15px 0px;;
         height: auto;
+        border-radius: 5px;
+        cursor: pointer;
         padding: 15px;
-        background-color: white;
-        box-shadow: 0px 0px 3px gray;
+        background-color: #f0f0f0;
     }
+
+    .article-list_item:hover {
+        box-shadow: 0px 0px 6px gray;
+    }
+
+    .article-title {
+        color: #007bff;
+        cursor: default;
+        font-size: 1.5rem;
+        height: 2.8rem;
+        line-height: 2.8rem;
+    }
+
+
 </style>
 

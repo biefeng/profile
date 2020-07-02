@@ -142,17 +142,6 @@
         word-break: break-word;
     }
 
-    /*plugin_detail.html*/
-    .plugin-detail-container {
-        /*background-color: white;*/
-        padding: 10px;
-    }
-
-    #carouselExampleIndicators {
-        width: 480px;
-        margin: auto;
-        height: 300px;
-    }
 
 </style>
 

@@ -9,7 +9,7 @@
                 </el-carousel-item>
             </el-carousel>
         </div>
-        <div style="text-align: left;margin: 0px 50px 50px 50px;">
+        <div class="plugin-detail-description">
             <div style="width: 100%;text-align: right;padding-right: 30px">
                 <a :href="plugin.crx_url">
                     <el-button type="primary">下载</el-button>
@@ -51,7 +51,14 @@
 </script>
 <style>
     .plugin-detail-container {
+        height: 100%;
+        padding-bottom: 10px;
         background-color: #f0f0f0;
+    }
+
+    .plugin-detail-description {
+        text-align: left;
+        margin: 0px 50px 0px 50px;
     }
 </style>
 

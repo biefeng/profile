@@ -26,7 +26,7 @@
 }
 
 .colorful-label.primary {
-    background-color: #4c86db;
+    background-color: #2cdeca;
 }
 
 .colorful-label.warn {
@@ -34,11 +34,14 @@
 }
 
 .colorful-label.info {
-    background-color: #aaaab0;
+    background-color: #adadb9;
 }
 
 .colorful-label.success {
-    background-color: #1cdb37;
+    background-color: #4c86db;
+}
+.colorful-label.hot {
+    background-color: #ff423d;
 }
 
 
