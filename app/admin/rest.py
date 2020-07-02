@@ -57,15 +57,4 @@ def del_article():
     return {}
 
 
-@login_required
-@admin.route("/list-chrome-plugins", methods=['GET'])
-def chrome_plugin_list():
-    page_size = request.args.get('pageSize', 10)
-    page_number = request.args.get('pageNumber', 0)
-    paginate = ChromePlugin.query.order_by(ChromePlugin.create_time.desc()).paginate(int(page_number), per_page=int(page_size), error_out=True)
-    items = paginate.items
-    result = {
-        'total': paginate.total,
-        'list': items
-    }
-    return Response(pickler.encode(result), status=200, mimetype="application/json")
+

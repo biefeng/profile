@@ -7,4 +7,4 @@ from flask import Blueprint
 
 chrome_plugin = Blueprint('chrome_plugin', __name__)
 
-from . import views
+from . import routes, rest

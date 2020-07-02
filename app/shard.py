@@ -6,6 +6,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import logging
+from functools import wraps
 
 logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
 # logging.getLogger('sqlalchemy.dialects').setLevel(logging.DEBUG)

@@ -61,7 +61,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <pagination :total="total" :size_change="sizeChange" :current_change="list"></pagination>
+        <pagination :total="total" :size_change="sizeChange" :current_change="list" :pageSize="pageSize"></pagination>
     </div>
 </template>
 {% endraw%}
@@ -99,7 +99,7 @@
                 if (pageNum != undefined) {
                     this.currentPage = pageNum
                 }
-                this.$http.get("/admin/list-chrome-plugins", {
+                this.$http.get("/chrome-plugin/list-data", {
                     params: assign
                 }).then(res => {
                     this.tableData = res.data.list

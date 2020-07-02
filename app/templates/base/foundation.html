@@ -9,7 +9,20 @@
     <script type="text/javascript" src="{{ url_for("static",filename='vue/vue.js') }}"></script>
     <script type="text/javascript" src="{{ url_for("static",filename='axios/axios.js') }}"></script>
     <script src="{{ url_for("static",filename='element/index@2.13.2.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for("static",filename='jsonpicklejs/jsonpickle.min.js') }}"></script>
     <script type="text/javascript">
+
+        function unicodeToString(content) {
+            var div = document.createElement('div');
+            div.innerHTML = content;
+            let s = div.innerText || div.textContent;
+            div.remove()
+            return s;
+        }
+
+        let uncodeStr = unicodeToString('{{ context }}');
+        window.context = jsonpickle.decode(uncodeStr)
+
         axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
         axios.defaults.headers.get['Content-Type'] = 'application/json'
         const axiosInstance = axios.create({

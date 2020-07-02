@@ -1,17 +1,21 @@
 {%raw%}
-<div id="sample">
-    {{activeIndex1}}
-</div>
+<template id="sample">
+    <div>
+        {{message}}
+    </div>
+</template>
 {%endraw%}
 <script>
-    let element = document.querySelector("#sample");
     Vue.component("main-content", {
-        template: element.outerHTML,
+        template: "#sample",
         data() {
             return {
-                activeIndex1: 1
+                message: "The is a sample component"
             }
         }
     });
 </script>
+<style>
+
+</style>
 
