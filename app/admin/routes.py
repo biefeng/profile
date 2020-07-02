@@ -14,10 +14,16 @@ def manager():
     return redirect(url_for('admin.manage_articles'))
 
 
+@admin.route('/edit-article')
+@login_required
+def edit_article():
+    return render_template('base/admin.html', component="article/article_editor.vue")
+
+
 @admin.route('/index')
 @login_required
 def index():
-    return  render_template('base/index.html', component="admin/article-list.vue")
+    return render_template('base/index.html', component="admin/article-list.vue")
 
 
 @admin.route('/manage-articles', methods=['GET', 'POST'])

@@ -33,8 +33,9 @@
                     </el-menu>
                 </el-header>
                 <el-container>
-                    <el-scrollbar style="height: 100%;border-right: 2.5px solid #f0f0f0;">
-                        <el-aside width="200px">
+
+                    <el-aside width="200px">
+                        <el-scrollbar style="height: 100%;border-right: 2.5px solid #f0f0f0;">
                             <el-menu
                                     :default-active="activeIndex2"
                                     ref="leftMenu"
@@ -50,7 +51,7 @@
                                         <span>博客</span>
                                     </template>
                                     <el-menu-item-group>
-                                        <a href="#">
+                                        <a href="{{ url_for('admin.edit_article') }}">
                                             <el-menu-item index="1-1">发表博文</el-menu-item>
                                         </a>
                                         <a href="{{ url_for('admin.manager') }}">
@@ -103,8 +104,9 @@
                                 </el-submenu>
 
                             </el-menu>
-                        </el-aside>
-                    </el-scrollbar>
+                        </el-scrollbar>
+                    </el-aside>
+
                     <el-main>
                         <main-content></main-content>
                     </el-main>
@@ -139,7 +141,7 @@
                     window.localStorage.setItem("activeIndex2", key)
                 }
             },
-            destroy(){
+            destroy() {
                 console.log("--------")
             }
         })

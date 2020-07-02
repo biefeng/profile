@@ -11,7 +11,6 @@
     <script src="{{ url_for("static",filename='element/index@2.13.2.js') }}"></script>
     <script type="text/javascript" src="{{ url_for("static",filename='jsonpicklejs/jsonpickle.min.js') }}"></script>
     <script type="text/javascript">
-
         function unicodeToString(content) {
             var div = document.createElement('div');
             div.innerHTML = content;
@@ -39,6 +38,7 @@
             return config
         })
     </script>
+    {% block headr_js %}{% endblock %}
 </head>
 <body>
 {% block body %}
