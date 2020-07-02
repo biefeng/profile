@@ -1,7 +1,6 @@
 {% raw%}
 <template id="article-list">
     <div>
-
         <el-row :gutter="20">
             <el-col :xs="{span:15,offset:0}" :sm="{span:9,offset:0}" :md="{span:6}" :lg="{span:5}">
                 <span class="query-label">来源:</span>

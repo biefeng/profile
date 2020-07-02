@@ -1,7 +1,7 @@
 {%raw%}
 <template id="sample">
-    <div style="height: 100%;width:100%;display: flex;justify-content: center;">
-        <div style="width: 70%;height: 100%;background-color: #f0f0f0;box-shadow: 0px 0px 2px gray;text-align: center;padding: 0px;">
+    <div class="main-wrap-outer">
+        <div class="main-wrap-inner">
             <div style="width: 440px;margin: auto">
                 <el-carousel>
                     <el-carousel-item v-for="item in 4" :key="item">

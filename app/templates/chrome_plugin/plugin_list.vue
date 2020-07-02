@@ -1,24 +1,23 @@
 {% raw %}
 <template id="chrome-plugin-list">
-    <div style="height: 100%;width:100%;display: flex;justify-content: center;">
-        <div style="width: 70%;height: 100%;background-color: #f0f0f0;box-shadow: 0px 0px 2px gray" v-loading="loading">
-            <div class="plugin-list-container">
-                <a :href="'/chrome-plugin/detail/'+plugin.id" v-for="plugin in plugins">
-                    <div class="plugin-list-item">
-                        <img aria-hidden="true"
-                             :src="plugin.cover_image"
-                             class="plugin-list-item-cover-img">
-                        <div class="plugin-list-item-description">
-                            {{ plugin.short_desc }}
-                        </div>
-                        <div class="plugin-list-item-info">
-                            {{ plugin.name }}
-                        </div>
+    <div>
+        <div role="grid" class="plugin-list-container">
+            <a :href="'/chrome-plugin/detail/'+plugin.id" v-for="plugin in plugins">
+                <div class="plugin-list-item">
+                    <img aria-hidden="true"
+                         :src="plugin.cover_image"
+                         class="plugin-list-item-cover-img">
+                    <div class="plugin-list-item-description">
+                        {{ plugin.short_desc }}
                     </div>
-                </a>
-            </div>
+                    <div class="plugin-list-item-info">
+                        {{ plugin.name }}
+                    </div>
+                </div>
+            </a>
             <pagination :total="total" :size_change="sizeChange" :current_change="list" :page_size="20"></pagination>
         </div>
+
     </div>
 </template>
 {% endraw %}
@@ -65,12 +64,11 @@
 <style>
 
     .plugin-list-container {
-        display: flex;
-        align-content: center;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
+        margin: auto;
+        position: relative;
         padding-right: 25px;
+        background-color: #f0f0f0;
+        width: 960px;
     }
 
     .plugin-list-item {
