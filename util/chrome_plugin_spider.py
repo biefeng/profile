@@ -35,7 +35,7 @@ headers = {
 }
 
 today = datetime.date.today()
-date_prefix = "{0}-{1}-{2}".format(today.year, today.month, today.day)
+date_prefix = "{0}-{1}-{2}".format(today.year, today.month,2)
 
 base_word_dir = "D:\\Download\\chromePlugin\\"
 
@@ -220,7 +220,7 @@ class ChromePluginSpider():
 
 
 if __name__ == '__main__':
-    spider = ChromePluginSpider("https://chrome.google.com/webstore/ajax/item?hl=zh-CN&gl=JP&pv=20200420&mce=atf%2Cpii%2Crtr%2Crlb%2Cgtc%2Chcn%2Csvp%2Cwtd%2Chap%2Cnma%2Cdpb%2Car2%2Cc3d%2Cncr%2Cctm%2Cac%2Chot%2Cmac%2Cepb%2Cfcf%2Crma%2Cigb%2Cpot%2Cevt&count=200&token=28%405013323&category=extensions&sortBy=0&container=CHROME&features=5&_reqid=1906360&rt=j")
+    spider = ChromePluginSpider("https://chrome.google.com/webstore/ajax/item?hl=zh-CN&gl=JP&pv=20200420&mce=atf%2Cpii%2Crtr%2Crlb%2Cgtc%2Chcn%2Csvp%2Cwtd%2Chap%2Cnma%2Cdpb%2Car2%2Cc3d%2Cncr%2Cctm%2Cac%2Chot%2Cmac%2Cepb%2Cfcf%2Crma%2Cpot%2Cevt&requestedCounts=infiniteWall%3A96%3A0%3Afalse&token=featured%3A0%4010785749%3A7%3Afalse%2Cmcol%23top_picks_web-development%3A0%4010785750%3A11%3Atrue%2CinfiniteWall%3A0%4010785789%3A188%3Afalse&category=ext%2F11-web-development&_reqid=1012219&rt=j")
     # spider.get_plugins()
-    # spider.upload_plugins()
+    spider.upload_plugins()
     spider.import_into_mysql_ignore_exists()

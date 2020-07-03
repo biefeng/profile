@@ -36,3 +36,9 @@ def manage_articles():
 @login_required
 def manage_plugins():
     return render_template('base/admin.html', component="admin/chrome-plugin-list.vue")
+
+
+@admin.route('/manage-plugins', methods=['GET', 'POST'])
+@login_required
+def manage_plugins():
+    return render_template('base/admin.html', component="admin/chrome-plugin-list.vue")

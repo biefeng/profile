@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="{{url_for('static',filename='mavon-editor/index.css')}}">
 <!--<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>-->
 <script type="text/javascript" src="{{ url_for('static',filename='mavon-editor/mavon-editor.js') }}"></script>
-<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.1/build/styles/railscasts.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.1/build/styles/railscasts.min.css">
 <script>
 
     Vue.use(MavonEditor)
@@ -66,6 +66,9 @@
                     hljs_lang: function (lang) {
                         // 这是你的代码高亮语言解析路径
                         return "";
+                    },
+                    katex_js: function () {
+                        return "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
                     }
                 }
             }
@@ -74,7 +77,11 @@
         updated() {
 
         },
-        methods: {}
+        methods: {
+            save() {
+
+            }
+        }
     });
 </script>
 <style>

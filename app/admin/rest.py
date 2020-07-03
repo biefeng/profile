@@ -19,13 +19,3 @@ def get_json():
     return map
 
 
-@login_required
-@admin.route("/del-article", methods=["POST"])
-def del_article():
-    request_data = request.json
-    if request_data is None or request_data['ids'] is None:
-        return {}
-    for ai in request_data['ids']:
-        article = Article.query.get_or_404(ai)
-        db.session.delete(article)
-    return {}
