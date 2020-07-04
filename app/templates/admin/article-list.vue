@@ -58,7 +58,7 @@
                     prop="name"
                     label="来源"
                     width="120">
-                <template slot-scope="scope">{{ scope.row.source }}</template>
+                <template slot-scope="scope">{{ scope.row.sourceStr }}</template>
             </el-table-column>
             <el-table-column
                     prop="address"
@@ -79,10 +79,12 @@
                     width="180"
                     show-overflow-tooltip>
                 <template slot-scope="scope">
-                    <el-button
-                            size="mini"
-                            @click="handleEdit(scope.$index, scope.row)">编辑
-                    </el-button>
+                    <a :href="'/article/edit/'+scope.row.id">
+                        <el-button
+                                v-if="scope.row.source === 1"
+                                size="mini">编辑
+                        </el-button>
+                    </a>
                     <el-button
                             size="mini"
                             type="danger"
@@ -120,9 +122,10 @@
         },
         methods: {
             handleEdit() {
+
             },
             handleDelete(index, row) {
-                this.$http.post("/admin/del-article", {ids: [row.id]}).then(res => {
+                this.$http.post("/article/del", {ids: [row.id]}).then(res => {
                     this.list(1)
                 }).catch(e => {
                     console.log(e)

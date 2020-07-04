@@ -6,7 +6,7 @@ formatters:
 handlers:
   console:
     class: logging.StreamHandler
-    level: ERROR
+    level: DEBUG
     formatter: simple
   file:
     class: logging.handlers.TimedRotatingFileHandler
@@ -18,5 +18,5 @@ handlers:
     interval: 1
     backupCount: 30
 root:
-  level: INFO
+  level: DEBUG
   handlers: [file,console]

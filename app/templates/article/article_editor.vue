@@ -1,12 +1,28 @@
 {%raw%}
 <template id="article-editor">
-
     <div id="editor">
+        <div style="padding: 15px 0; ">
+
+            <el-input style="width: 300px;" v-model="article.title" placeholder="标题"></el-input>
+            <el-select v-model="article.source" placeholder="类型">
+                <el-option
+                        v-for="item in articleTypes"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+        </div>
         <mavon-editor class="mavonEditor"
                       :subfield="subfield"
                       :code-style="code_style"
+                      v-on:save="saveArticle(context)"
                       :external-link="externalLink"
-                      v-model="context"></mavon-editor>
+                      v-model="article.content_md"></mavon-editor>
+        <div style="margin-top: 10px;text-align: right">
+            <el-button type="primary" @click="clearContent">清空</el-button>
+            <el-button type="success" @click="saveArticle(article.contentMd)">保存</el-button>
+        </div>
     </div>
 </template>
 {%endraw%}
@@ -70,21 +86,63 @@
                     katex_js: function () {
                         return "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
                     }
-                }
+                },
+                article: {
+                    id: '{{id}}',
+                    title: '',
+                    content_md: '',
+                    type: '',
+                    content: ''
+                },
+                articleTypes: [
+                    {
+                        label: 'JAVA',
+                        value: 1
+                    }
+                ]
             }
         },
         computed: {},
         updated() {
 
         },
+        created() {
+            if (this.article.id && this.article.id > 0) {
+                this.loadArticle()
+            }
+        },
         methods: {
-            save() {
-
+            saveArticle(content) {
+                if (!this.article.title || !this.article.contentMd) {
+                    this.$message.error("标题和内容不能为空")
+                    return
+                }
+                let markdownIt = MavonEditor.markdownIt;
+                this.article.content = markdownIt.render(content)
+                this.$http.post("/article/save", this.article).then(res => {
+                    console.log(res)
+                }).catch(e => {
+                    console.log(e)
+                })
+            },
+            clearContent() {
+                this.article.contentMd = ''
+            },
+            loadArticle() {
+                this.$http.get("/article/get", {
+                    params: {id: this.article.id}
+                }).then(res => {
+                    Object.assign(this.article, res.data)
+                    console.log(this.article)
+                })
             }
         }
     });
 </script>
 <style>
+    .mavonEditor h1 {
+        font-size: 2em;
+    }
 
 </style>
 

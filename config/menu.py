@@ -1,3 +1,5 @@
+import datetime
+
 _admin_menus = [
     {
         "type": "subMenu",
@@ -149,3 +151,10 @@ def get_menu(**kwargs):
 
 if __name__ == '__main__':
     print(get_menu(mode='horizontal'))
+    sql = 'INSERT INTO articles (title, content, content_md, articleType_id, source_id) VALUES (%(title)s, %(content)s, %(content_md)s, %(source_id)s)'
+
+    parameters = {'summary': None, 'update_time': datetime.datetime(2020, 7, 4, 7, 27, 25, 131312), 'content': '&lt;h3&gt;&lt;a id=&quot;Emoji_smiley_1&quot;&gt;&lt;/a&gt;Emoji表情 😃&lt;/h3&gt;\n&lt;blockquote&gt;\n&lt;p&gt;Blockquotes ⭐️&lt;/p&gt;\n&lt;/blockquote&gt;\n', 'content_md': '\n### Emoji表情 :smiley:\n\n> Blockquotes :star:\n', 'title': '27222', 'num_of_view': 0, 'articleType_id': 1, 'create_time': datetime.datetime(2020, 7, 4, 7, 27, 25, 131312), 'ref_url': None, 'source_id': 1}
+    test = "%(sty)s".format_map({'sty':1})
+    print(test)
+
+    print('INSERT INTO articles (title, ref_url, content, content_md, summary, create_time, update_time, num_of_view, `articleType_id`, source_id) VALUES (%(title)s, %(ref_url)s, %(content)s, %(content_md)s, %(summary)s, %(create_time)s, %(update_time)s, %(num_of_view)s, %(articleType_id)s, %(source_id)s)' % {'summary': None, 'update_time': datetime.datetime(2020, 7, 4, 7, 27, 25, 131312), 'content': '&lt;h3&gt;&lt;a id=&quot;Emoji_smiley_1&quot;&gt;&lt;/a&gt;Emoji表情 😃&lt;/h3&gt;\n&lt;blockquote&gt;\n&lt;p&gt;Blockquotes ⭐️&lt;/p&gt;\n&lt;/blockquote&gt;\n', 'content_md': '\n### Emoji表情 :smiley:\n\n> Blockquotes :star:\n', 'title': '27222', 'num_of_view': 0, 'articleType_id': 1, 'create_time': datetime.datetime(2020, 7, 4, 7, 27, 25, 131312), 'ref_url': None, 'source_id': 1})

@@ -20,7 +20,7 @@ class Config():
     SQLALCHEMY_RECORD_QUERIES = True
     # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
     #     'sqlite:///' + os.path.join(basedir, 'data.sqlite')
-    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:Biefeng123!@106.13.83.252/blog_mini"
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:Biefeng123!@106.13.83.252/blog_mini?charset=utf8mb4"
     ARTICLES_PER_PAGE = 10
     COMMENTS_PER_PAGE = 6
     PLUGINS_PER_PAGE = 16
@@ -29,7 +29,12 @@ class Config():
 
     FLASKY_DB_QUERY_TIMEOUT = 1
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
-    SQLALCHEMY_RECORD_QUERIES = True
+    SQLALCHEMY_RECORD_QUERIES = False
+    SQLALCHEMY_ECHO = True
+
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "charset": "utf8mb4"
+    }
 
     # Take good care of 'SECRET_KEY' and 'WTF_CSRF_SECRET_KEY', if you use the
     # bootstrap extension to create a form, it is Ok to use 'SECRET_KEY',

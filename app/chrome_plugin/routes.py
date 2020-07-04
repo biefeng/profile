@@ -5,6 +5,7 @@
 
 
 from flask import render_template
+from flask_login import login_required
 
 from app.models import ChromePlugin
 
@@ -18,5 +19,10 @@ def plugin_list():
 
 @chrome_plugin.route('/detail/<int:id>', methods=['GET'])
 def plugin_detail(id):
-    plugin = ChromePlugin.query.get_or_404(id)
     return render_template('base/index.html', id=id, component='chrome_plugin/plugin_detail.vue')
+
+
+@chrome_plugin.route('/spider', methods=['GET'])
+@login_required
+def plugin_spider():
+    return render_template('base/admin.html', component='chrome_plugin/plugin_spider.vue')

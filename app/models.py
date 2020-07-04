@@ -309,6 +309,7 @@ class Article(db.Model):
     title = db.Column(db.String(256), unique=True)
     ref_url = db.Column(db.String(256), unique=True)
     content = db.Column(db.Text)
+    content_md = db.Column(db.Text)
     summary = db.Column(db.Text)
     create_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     update_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
@@ -346,8 +347,8 @@ class Article(db.Model):
         db.session.add(article)
         db.session.commit()
 
-    def __repr__(self):
-        return '<Article %r>' % self.title
+    # def __repr__(self):
+    #     return '<Article %r>' % self.title
 
 
 class BlogInfo(db.Model):
