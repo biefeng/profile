@@ -20,6 +20,5 @@ def edit_article(id):
 
 
 @article.route("/detail-view/<int:id>", methods=["GET"])
-@login_required
 def view_article(id):
     return render_template('base/index.html', id=id, component='article/article_detail.vue')

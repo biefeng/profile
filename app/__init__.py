@@ -67,7 +67,7 @@ def registry_routes(app):
     from .chrome_plugin import chrome_plugin as chrome_plugin_blueprint
     app.register_blueprint(chrome_plugin_blueprint, url_prefix='/chrome-plugin')
 
-    from comment import comment as comment__blueprint
+    from .comment import comment as comment__blueprint
     app.register_blueprint(comment__blueprint, url_prefix='/comment')
 
     from .article import article as article_blueprint
