@@ -9,7 +9,7 @@
                         Login
                     </span>
                     <div class="input-group-field">
-                        <el-input class="input-group-field-value" v-model="entity.email" placeholder="Email"></el-input>
+                        <el-input class="input-group-field-value" v-model="entity.username" placeholder="Email"></el-input>
                     </div>
                     <div class="input-group-field">
 
@@ -33,7 +33,7 @@
             data() {
                 return {
                     entity: {
-                        email: '',
+                        username: '',
                         password: '',
                         remember: true
                     }
@@ -46,9 +46,14 @@
             methods: {
                 signIn() {
                     this.$http.post("/auth/login", this.entity).then(res => {
-                        window.location.href = "{{ url_for('admin.home') }}"
+                        let data = res.data;
+                        if (data && data.status == 1) {
+                            window.location.href = "{{ url_for('admin.home') }}"
+                        } else {
+                            this.$message.error(data.err_msg)
+                        }
                     }).catch(e => {
-                        console.log(e)
+                        this.$message.warning(e.message)
                     })
                 }
             },

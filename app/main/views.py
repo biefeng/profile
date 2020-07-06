@@ -13,7 +13,7 @@ from ..models import Article, ArticleType, Comment, \
 SYMBOL_MAP = {'&#34;': '"', '&#39;': "'", }
 
 
-@main.route('/')
+@main.route('/old')
 def index():
     BlogView.add_view(db)
     page = request.args.get('page', 1, type=int)

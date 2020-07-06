@@ -1,8 +1,8 @@
 {%raw%}
 <template id="article-editor">
-    <div id="editor">
-        <div style="padding: 15px 0; ">
 
+    <div id="editor" v-loading="loadingId > 0">
+        <div style="padding: 15px 0; ">
             <el-input style="width: 300px;" v-model="article.title" placeholder="标题"></el-input>
             <el-select v-model="article.source" placeholder="类型">
                 <el-option
@@ -12,6 +12,8 @@
                         :value="item.value">
                 </el-option>
             </el-select>
+
+            <el-input style="margin-top: 10px" v-model="article.summary" placeholder="简描述"></el-input>
         </div>
         <mavon-editor class="mavonEditor"
                       :subfield="subfield"
@@ -21,7 +23,7 @@
                       v-model="article.content_md"></mavon-editor>
         <div style="margin-top: 10px;text-align: right">
             <el-button type="primary" @click="clearContent">清空</el-button>
-            <el-button type="success" @click="saveArticle(article.contentMd)">保存</el-button>
+            <el-button type="success" @click="saveArticle">保存</el-button>
         </div>
     </div>
 </template>
@@ -92,14 +94,16 @@
                     title: '',
                     content_md: '',
                     type: '',
-                    content: ''
+                    content: '',
+                    summary: ''
                 },
                 articleTypes: [
                     {
                         label: 'JAVA',
                         value: 1
                     }
-                ]
+                ],
+                loadingId: '{{id}}',  //用来控制是否做loading
             }
         },
         computed: {},
@@ -110,15 +114,16 @@
             if (this.article.id && this.article.id > 0) {
                 this.loadArticle()
             }
+
         },
         methods: {
             saveArticle(content) {
-                if (!this.article.title || !this.article.contentMd) {
+                if (!this.article.title || !this.article.content_md) {
                     this.$message.error("标题和内容不能为空")
                     return
                 }
                 let markdownIt = MavonEditor.markdownIt;
-                this.article.content = markdownIt.render(content)
+                this.article.content = markdownIt.render(this.article.content_md)
                 this.$http.post("/article/save", this.article).then(res => {
                     console.log(res)
                 }).catch(e => {
@@ -126,7 +131,7 @@
                 })
             },
             clearContent() {
-                this.article.contentMd = ''
+                this.article.content_md = ''
             },
             loadArticle() {
                 this.$http.get("/article/get", {
@@ -134,6 +139,9 @@
                 }).then(res => {
                     Object.assign(this.article, res.data)
                     console.log(this.article)
+                    this.loadingId = 0
+                }).catch(e => {
+                    this.loadingId = 0
                 })
             }
         }

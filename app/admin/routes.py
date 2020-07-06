@@ -31,3 +31,8 @@ def index():
 def manage_articles():
     return render_template('base/admin.html', component="admin/article-list.vue")
 
+
+@admin.route('/manage-users', methods=['GET', 'POST'])
+@login_required
+def manage_users():
+    return render_template('base/admin.html', component="admin/user.vue")

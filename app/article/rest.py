@@ -4,7 +4,7 @@
 # file_name : rest.py
 
 from flask import Response, request
-from flask_login import login_required
+from flask_login import login_required, current_user
 from jsonpickle import pickler
 from app.enums import ARTICLE_TYPE
 import html
@@ -13,6 +13,8 @@ from jsonpickle import pickler
 from app import db
 from app.models import Article
 from . import article
+
+import json
 
 
 @article.route("/list-data", methods=['GET'])
@@ -31,8 +33,8 @@ def article_list():
     items = paginate.items
     articles = []
     for item in items:
-        article = {'id': item.id, 'summary': item.summary, 'title': item.title, 'create_time': str(item.create_time), 'num_of_view': item.num_of_view, 'sourceStr': item.source.name, 'source': item.source.id}
-        articles.append(article)
+        art = {'id': item.id, 'summary': item.summary, 'title': item.title, 'create_time': str(item.create_time), 'num_of_view': item.num_of_view, 'sourceStr': item.source.name, 'source': item.source.id}
+        articles.append(art)
     result = {
         'total': paginate.total,
         'list': articles
@@ -56,13 +58,15 @@ def del_article():
 @article.route("/save", methods=["POST"])
 def save_article():
     request_data = request.json
-
-    if request_data:
-        request_data['content'] = html.escape(request_data['content'])
-        art = Article(title=request_data['title'], content=html.escape(request_data['content']), source_id=ARTICLE_TYPE.原创.value, articleType_id=1, content_md=request_data['contentMd'])
+    if request_data is None:
+        return
+    id_ = request_data['id']
+    if id_:
+        Article.query.filter_by(id=id_).update(request_data)
+    else:
+        art = Article(title=request_data['title'], content=html.escape(request_data['content']), summary=request_data['summary'], source_id=ARTICLE_TYPE.原创.value, articleType_id=1, content_md=request_data['content_md'])
         db.session.add(art)
-        db.session.commit()
-    print(art)
+    db.session.commit()
     return {}
 
 
@@ -73,4 +77,8 @@ def get_article():
     if ai is not None:
         art = Article.query.get_or_404(ai)
         art.content = html.unescape(art.content)
-    return pickler.encode(art)
+        if current_user.is_authenticated:
+            # return {'id': art.id, 'content': art.content, 'content_md': art.content_md, 'summary': art.summary, 'title': art.title, 'create_time': str(art.create_time), 'num_of_view': art.num_of_view, 'sourceStr': art.source.name, 'source': art.source.id}
+            return art.to_dict()
+        else:
+            return {"content": art.content}

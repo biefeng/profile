@@ -16,6 +16,31 @@ article_types = {u'开发语言': ['Python', 'Java', 'JavaScript'],
                  u'Web开发': ['Flask', 'Django'], }
 
 
+class BaseModel(db.Model):
+    __abstract__ = True  # 定义为基类
+
+    # id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    # createDate = db.Column("create_date", db.DateTime, default=datetime.now)
+
+    def __init__(self):
+        table_name = self.__tablename__ if self.__tablename__ else self.__class__.__name__.lower()
+        table = db.Model.metadata.tables[table_name]
+        for key, value in table.columns.items():
+            if value.default:
+                setattr(self, key, value.default.arg)
+
+    def get_table_columns(self):
+        return [k for k in self.__table__.columns.keys()]
+
+    def to_dict(self):
+        columns = self.get_table_columns()
+        values = self.__dict__
+        result = {}
+        for col in columns:
+            result[col] = values[col]
+        return result
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
@@ -303,7 +328,7 @@ class Comment(db.Model):
             return self.followed.first().followed.author_name
 
 
-class Article(db.Model):
+class Article(BaseModel):
     __tablename__ = 'articles'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(256), unique=True)
@@ -317,6 +342,9 @@ class Article(db.Model):
     articleType_id = db.Column(db.Integer, db.ForeignKey('articleTypes.id'))
     source_id = db.Column(db.Integer, db.ForeignKey('sources.id'))
     comments = db.relationship('Comment', backref='article', lazy='dynamic')
+
+    __setitem__ = object.__setattr__
+    __getitem__ = object.__getattribute__
 
     @staticmethod
     def generate_fake(count=100):

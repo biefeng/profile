@@ -15,7 +15,7 @@
                             active-text-color="#ffd04b">
 
                         <el-menu-item index="1">
-                            <a href="{{ url_for('admin.home') }}">
+                            <a href="{{ url_for('main.index_new') }}">
                                 Flask
                             </a></el-menu-item>
                         <div class="profile-container">
@@ -29,7 +29,7 @@
                                 <a class="dropdown-item" href="{{ url_for('admin.manage_articles') }}">
                                     <el-menu-item index="2-2">管理博文</el-menu-item>
                                 </a>
-                                <a class="dropdown-item" href="{{ url_for('admin.submitArticles') }}">
+                                <a class="dropdown-item" href="{{ url_for('auth.logout_view') }}">
                                     <el-menu-item index="2-2">退出登录</el-menu-item>
                                 </a>
                             </el-submenu>
@@ -99,7 +99,9 @@
                                         <span>其它管理</span>
                                     </template>
                                     <el-menu-item-group>
-                                        <el-menu-item index="4-1">用户管理</el-menu-item>
+                                        <a href="{{ url_for('admin.manage_users') }}">
+                                            <el-menu-item index="4-1">用户管理</el-menu-item>
+                                        </a>
                                     </el-menu-item-group>
                                 </el-submenu>
 

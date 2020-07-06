@@ -2,7 +2,7 @@
 <template id="article_list">
 
     <div class="article-list_container" v-loading="loading">
-        <a v-for="article in articles" style="display: block">
+        <a v-for="article in articles" :href="'/article/detail-view/'+article.id" style="display: block">
             <div class="article-list_item">
                 <div class="article-title">{{article.title}}</div>
 
@@ -74,6 +74,7 @@
 <style>
     .article-list_container {
         padding: 15px;
+        text-align: left;
     }
 
     .article-list_item {

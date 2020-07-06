@@ -10,7 +10,7 @@ from . import main
 from config.menu import get_menu
 
 
-@main.route('/new')
+@main.route('/')
 def index_new():
     return render_template('base/index.html', component='article/article_list.vue')
 

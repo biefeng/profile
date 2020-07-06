@@ -27,6 +27,7 @@
             <el-col :xs="{span:15,offset:0}" :sm="{span:9,offset:0}" :md="{span:5}">
                 <el-button type="primary" @click="list(1,query)">查询</el-button>
                 <el-button type="danger">批量删除</el-button>
+                <el-button type="success" @click="dialogVisible=!dialogVisible">添加用户</el-button>
             </el-col>
         </el-row>
 
@@ -45,41 +46,21 @@
                     width="55">
             </el-table-column>
             <el-table-column
-                    label="标题">
-                <template slot-scope="scope">{{ scope.row.title }}</template>
+                    label="用户名">
+                <template slot-scope="scope">{{ scope.row.username }}</template>
             </el-table-column>
             <el-table-column
                     prop="name"
-                    label="访问量"
-                    width="120">
-                <template slot-scope="scope">{{ scope.row.num_of_view }}</template>
+                    label="邮箱">
+                <template slot-scope="scope">{{ scope.row.email }}</template>
             </el-table-column>
-            <el-table-column
-                    prop="name"
-                    label="来源"
-                    width="120">
-                <template slot-scope="scope">{{ scope.row.sourceStr }}</template>
-            </el-table-column>
-            <el-table-column
-                    prop="address"
-                    label="分类"
-                    width="120"
-                    show-overflow-tooltip>
-            </el-table-column>
-            <el-table-column
-                    prop="address"
-                    label="发表日期"
-                    width="200"
-                    show-overflow-tooltip>
-                <template slot-scope="scope">{{ scope.row.create_time}}</template>
-            </el-table-column>
+
             <el-table-column
                     prop="address"
                     label="操作"
-                    width="180"
                     show-overflow-tooltip>
                 <template slot-scope="scope">
-                    <a :href="'/article/edit-view/'+scope.row.id">
+                    <a :href="'/article/edit/'+scope.row.id">
                         <el-button
                                 v-if="scope.row.source === 1"
                                 size="mini">编辑
@@ -94,6 +75,27 @@
             </el-table-column>
         </el-table>
         <pagination :total="total" :size_change="sizeChange" :current_change="list"></pagination>
+        <el-dialog
+                title="添加用户"
+                :visible.sync="dialogVisible"
+                width="30%"
+                :before-close="handleClose">
+            <div class="input-group" style="width: auto;height: auto;margin: auto">
+                <div class="input-group-field">
+                    <el-input class="input-group-field-value" v-model="newUser.email" placeholder="Email"></el-input>
+                </div>
+                <div class="input-group-field">
+                    <el-input class="input-group-field-value" v-model="newUser.username" placeholder="Username"></el-input>
+                </div>
+                <div class="input-group-field">
+                    <el-input class="input-group-field-value" v-model="newUser.password" placeholder="Password"></el-input>
+                </div>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="addUser">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 {% endraw%}
@@ -105,19 +107,17 @@
             return {
                 tableData: [],
                 option: 1,
-                sources: [
-                    {value: 1, label: "原创"},
-                    {value: 2, label: "转载"},
-                    {value: 3, label: "翻译"},
-                ],
-                categories: [
-                    {value: 1, label: "未分类"},
-                ],
+                dialogVisible: false,
                 query: {},
                 pageSize: 10,
                 currentPage: 1,
                 total: 0,
-                loading: false
+                loading: false,
+                newUser: {
+                    email: '',
+                    username: '',
+                    password: ''
+                }
             }
         },
         methods: {
@@ -125,7 +125,7 @@
 
             },
             handleDelete(index, row) {
-                this.$http.post("/article/del", {ids: [row.id]}).then(res => {
+                this.$http.post("/admin/user/del", {id: [row.id]}).then(res => {
                     this.list(1)
                 }).catch(e => {
                     console.log(e)
@@ -139,20 +139,37 @@
                 if (pageNum != undefined) {
                     this.currentPage = pageNum
                 }
-                this.$http.get("/article/list-data", {
+                this.$http.get("/admin/user/list", {
                     params: assign
                 }).then(res => {
                     this.tableData = res.data.list
                     this.total = res.data.total
                     this.loading = false
                 }).catch(e => {
-                    this.$message.error(e)
+                    this.$message.error(e.message)
                     this.loading = false
                 })
             },
             sizeChange(s) {
                 this.pageSize = s
                 this.list(0, {pageSize: s})
+            },
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done()
+                    })
+                    .catch(_ => {
+                    });
+            },
+            addUser() {
+                this.dialogVisible = false
+                this.$http.post("/admin/user/add", this.newUser).then(res => {
+                    this.$message.success("添加成功")
+                    this.list(1)
+                }).catch(e => {
+                    this.$message.error(e.message)
+                })
             }
         },
         created() {
@@ -170,5 +187,35 @@
     .el-col {
         border-radius: 4px;
         margin-bottom: 20px;
+    }
+
+    .input-group {
+        text-align: center;
+        width: calc(100vw);
+        line-height: 10px;
+        position: relative;
+        top: 25%;
+    }
+
+    .input-group-header {
+        font-size: 1.75rem;
+        height: 50px;
+        line-height: 50px;
+        font-weight: bolder;
+    }
+
+    .input-group-field {
+        margin: 0px auto;
+        text-align: left;
+        line-height: 60px;
+        width: 400px;
+        height: 60px;
+    }
+
+    .input-group-field-label {
+        display: inline-block;
+        height: 30px;
+        text-align: left;
+        width: 60px;
     }
 </style>

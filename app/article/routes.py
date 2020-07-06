@@ -7,13 +7,19 @@ from flask_login import login_required
 from . import article
 
 
-@article.route("/edit", methods=["GET"])
+@article.route("/edit-view", methods=["GET"])
 @login_required
 def create_article():
     return render_template('base/admin.html', component='article/article_editor.vue')
 
 
-@article.route("/edit/<int:id>", methods=["GET"])
+@article.route("/edit-view/<int:id>", methods=["GET"])
 @login_required
 def edit_article(id):
     return render_template('base/admin.html', id=id, component='article/article_editor.vue')
+
+
+@article.route("/detail-view/<int:id>", methods=["GET"])
+@login_required
+def view_article(id):
+    return render_template('base/index.html', id=id, component='article/article_detail.vue')
