@@ -21,7 +21,7 @@
         }
 
         let uncodeStr = unicodeToString('{{ context }}');
-        window.context = jsonpickle.decode(uncodeStr)
+        {#window.context = jsonpickle.decode(uncodeStr)#}
 
         axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
         axios.defaults.headers.get['Content-Type'] = 'application/json'
@@ -33,17 +33,40 @@
                 return tmp
             }
         })
+
         Vue.prototype.$http = axiosInstance
         axiosInstance.interceptors.request.use(function (config) {
             config.headers.common['X-CSRFToken'] = "{{ csrf_token() }}"
             return config
         })
+        {#axiosInstance.interceptors.response.use(function (response) {
+            return response;
+        }, function (error) {
+            console.log(error)
+            return Promise.reject(error);
+        })#}
     </script>
     {% block headr_js %}{% endblock %}
 </head>
 <body>
+<style>
+    body {
+        margin: 0px;
+         font-size: 16px;
+    }
+
+    h1, h2, h3, h4, h5, h6, span, p {
+        margin: 0px;
+    }
+
+
+    a {
+        text-decoration: none;
+    }
+</style>
 {% block body %}
 
 {% endblock %}
 </body>
+
 </html>

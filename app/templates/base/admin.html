@@ -83,7 +83,7 @@
                                         <span>Chrome插件</span>
                                     </template>
                                     <el-menu-item-group>
-                                        <a href="{{ url_for('admin.manage_plugins') }}">
+                                        <a href="{{ url_for('chrome_plugin.manage_plugins') }}">
                                             <el-menu-item index="3-1">插件管理</el-menu-item>
                                         </a>
                                     </el-menu-item-group>
@@ -147,14 +147,7 @@
         })
     </script>
     <style>
-        body {
-            margin: 0px;
-            font-size: 16px;
-        }
 
-        a {
-            text-decoration: none;
-        }
 
         #app {
             height: calc(100vh);

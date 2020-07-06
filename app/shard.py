@@ -19,3 +19,20 @@ login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
 
 db = SQLAlchemy()
+
+
+def handle_template_render_exception(func):
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        try:
+            rendered_template = func(*args, **kwargs)
+        except Exception as e:
+            print("----------------------")
+            print(args)
+            print("----------------------")
+
+        return rendered_template
+
+    return decorated_view
+
+

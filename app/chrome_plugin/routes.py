@@ -22,6 +22,12 @@ def plugin_detail(id):
     return render_template('base/index.html', id=id, component='chrome_plugin/plugin_detail.vue')
 
 
+@chrome_plugin.route('/manage-plugins', methods=['GET', 'POST'])
+@login_required
+def manage_plugins():
+    return render_template('base/admin.html', component="admin/chrome-plugin-list.vue")
+
+
 @chrome_plugin.route('/spider', methods=['GET'])
 @login_required
 def plugin_spider():

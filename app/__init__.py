@@ -21,7 +21,7 @@ def create_app():
 
     log_slow_query(app)
 
-    template_context_signal(app)
+    template_context_handle_before_render(app)
 
     app.config.from_object(Config)
     Config.init_app(app)
@@ -83,18 +83,24 @@ def log_slow_query(app):
                       (query.statement, query.parameters, query.duration, query.context))  # 打印超时sql执行信息
         return response
 
-
-def template_context_signal(app):
     @app.teardown_request
     def handle_teardown_request(ex):
         pass
 
+
+def template_context_handle_before_render(app):
     @before_render_template.connect_via(app)
-    def log_template_renders(sender, template, context, **extra):
-        template_globals = template.globals
-        params = {}
-        for k, v in context.items():
-            if k not in template_globals:
-                params[k] = v
+    def before_render_template_signal(sender, template, context, **extra):
+        if 'component' in context:
+            print("+++++++++++++++++++++++++++++++++++")
+        else:
+            context['component'] = "sample.vue"
+            print("===================================")
+
+        # template_globals = template.globals
+        # params = {}
+        # for k, v in context.items():
+        #     if k not in template_globals:
+        #         params[k] = v
         # context['context'] = pickler.encode(params)
-        context['context'] = {}
+        # context['context'] = {}
