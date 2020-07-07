@@ -1,8 +1,8 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
 {%raw%}
 <template id="article-detail">
     <div class="article-detail-container">
-        <div style="width: 100%;border:1px dashed red;">
-            {{message}}
+        <div class="article-detail-wrapper markdown-body" style="">
             <div v-html="content">
 
             </div>
@@ -10,6 +10,7 @@
     </div>
 </template>
 {%endraw%}
+
 <script>
     Vue.component("main-content", {
         template: "#article-detail",
@@ -39,10 +40,15 @@
     });
 </script>
 <style>
-.article-detail-container{
-    text-align: left;
-    background-color: #f0f0f0;
-    padding: 15px;
-}
+    .article-detail-container {
+        text-align: left;
+        background-color: #f0f0f0ba;
+        min-height: 100%;
+    }
+
+    .article-detail-wrapper {
+        padding: 20px;
+    }
+
 </style>
 

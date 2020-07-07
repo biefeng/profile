@@ -1,35 +1,7 @@
 {% raw%}
 <template id="article-list">
     <div>
-        <el-row :gutter="20">
-            <el-col :xs="{span:15,offset:0}" :sm="{span:9,offset:0}" :md="{span:6}" :lg="{span:5}">
-                <span class="query-label">来源:</span>
-                <el-select v-model="query.source" placeholder="请选择">
-                    <el-option
-                            v-for="item in sources"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-col>
-            <el-col :xs="{span:15,offset:0}" :sm="{span:9,offset:0}" :md="{span:6}" :lg="{span:5}">
-                <span class="query-label">分类:</span>
-                <el-select v-model="query.category" placeholder="请选择">
-                    <el-option
-                            v-for="item in categories"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-col>
-            <el-col :xs="{span:15,offset:0}" :sm="{span:9,offset:0}" :md="{span:5}">
-                <el-button type="primary" @click="list(1,query)">查询</el-button>
-                <el-button type="danger">批量删除</el-button>
-                <el-button type="success" @click="dialogVisible=!dialogVisible">添加用户</el-button>
-            </el-col>
-        </el-row>
+        <el-button type="success" @click="dialogVisible=!dialogVisible">添加用户</el-button>
 
         <el-table
                 v-loading="loading"

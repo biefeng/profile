@@ -58,7 +58,7 @@
                     prop="name"
                     label="来源"
                     width="120">
-                <template slot-scope="scope">{{ scope.row.sourceStr }}</template>
+                <template slot-scope="scope">{{ scope.row.source }}</template>
             </el-table-column>
             <el-table-column
                     prop="address"
@@ -81,7 +81,7 @@
                 <template slot-scope="scope">
                     <a :href="'/article/edit-view/'+scope.row.id">
                         <el-button
-                                v-if="scope.row.source === 1"
+                                v-if="scope.row.source_id === 1"
                                 size="mini">编辑
                         </el-button>
                     </a>

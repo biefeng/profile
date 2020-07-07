@@ -4,11 +4,19 @@
     <div id="editor" v-loading="loadingId > 0">
         <div style="padding: 15px 0; ">
             <el-input style="width: 300px;" v-model="article.title" placeholder="标题"></el-input>
-            <el-select v-model="article.source" placeholder="类型">
+            <el-select v-model="article.articleType_id" placeholder="类型">
                 <el-option
                         v-for="item in articleTypes"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                </el-option>
+            </el-select>
+            <el-select v-model="article.private" placeholder="私密/公开">
+                <el-option
+                        v-for="item in displayOptions"
                         :key="item.value"
-                        :label="item.label"
+                        :label="item.name"
                         :value="item.value">
                 </el-option>
             </el-select>
@@ -28,10 +36,10 @@
     </div>
 </template>
 {%endraw%}
-<link rel="stylesheet" href="{{url_for('static',filename='mavon-editor/index.css')}}">
 <!--<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>-->
+<link rel="stylesheet" href="{{url_for('static',filename='mavon-editor/index.css')}}">
 <script type="text/javascript" src="{{ url_for('static',filename='mavon-editor/mavon-editor.js') }}"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.1/build/styles/railscasts.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
 <script>
 
     Vue.use(MavonEditor)
@@ -93,16 +101,14 @@
                     id: '{{id}}',
                     title: '',
                     content_md: '',
-                    type: '',
+                    articleType_id: undefined,
                     content: '',
+                    private: undefined,
                     summary: ''
                 },
-                articleTypes: [
-                    {
-                        label: 'JAVA',
-                        value: 1
-                    }
-                ],
+                articleTypes: [],
+
+                displayOptions: [],
                 loadingId: '{{id}}',  //用来控制是否做loading
             }
         },
@@ -114,6 +120,7 @@
             if (this.article.id && this.article.id > 0) {
                 this.loadArticle()
             }
+            this.loadOptions()
 
         },
         methods: {
@@ -142,6 +149,17 @@
                     this.loadingId = 0
                 }).catch(e => {
                     this.loadingId = 0
+                })
+            },
+            loadOptions() {
+                this.$http.get("/article_type/list").then(res => {
+                    this.articleTypes = res.data
+                })
+                this.$http.post("/enum/", ["DISPLAY_TYPE"]).then(res => {
+                    let data = res.data;
+                    if (data) {
+                        this.displayOptions = data['DISPLAY_TYPE']
+                    }
                 })
             }
         }

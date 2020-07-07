@@ -13,18 +13,23 @@
                             background-color="#545c64"
                             text-color="#fff"
                             active-text-color="#ffd04b">
-                        <el-menu-item index="1">Flask</el-menu-item>
-                        <el-menu-item index="2">
-                            <a style="height: 100%;" href="/">
-                                <span>博客</span>
-                            </a>
-                        </el-menu-item>
+                        <a style="display: inline-block" href="/">
+                            <el-menu-item index="1">Flask</el-menu-item>
+                        </a>
+                        <a style="display: inline-block" href="/">
+                            <el-menu-item index="2">
 
-                        <el-menu-item index="3">
-                            <a style="height: 100%;" href="/chrome-plugin/list">
+                                <span>博客</span>
+
+                            </el-menu-item>
+                        </a>
+                        <a style="display: inline-block" href="/chrome-plugin/list">
+                            <el-menu-item index="3">
+
                                 <span>Chrome插件</span>
-                            </a>
-                        </el-menu-item>
+
+                            </el-menu-item>
+                        </a>
 
                     </el-menu>
                 </el-header>
@@ -61,7 +66,6 @@
     <style>
 
 
-
         #app {
             height: calc(100vh);
         }
@@ -81,9 +85,9 @@
         #app .main-content_container {
             margin: auto;
             position: relative;
-            width: 1200px;
+            width: 1250px;
             text-align: center;
-            min-height: 100%;
+            height: 100%;
         }
     </style>
 {% endblock %}

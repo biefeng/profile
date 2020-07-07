@@ -4,6 +4,12 @@
 # file_name : __init__.py.py
 from enum import Enum
 
+from flask import Blueprint
+
+enums = Blueprint('enum', __name__)
+
+from . import rest
+
 
 class ARTICLE_TYPE(Enum):
     原创 = 1
@@ -16,6 +22,11 @@ class ARTICLE_TYPE(Enum):
         for val in values:
             if value == val.value:
                 return val.name
+
+
+class DISPLAY_TYPE(Enum):
+    私密 = 0
+    公开 = 1
 
 
 if __name__ == '__main__':

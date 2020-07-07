@@ -58,6 +58,9 @@ def registry_routes(app):
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
+    from .enums import enums as enum_blueprint
+    app.register_blueprint(enum_blueprint,url_prefix='/enum')
+
     from .admin import admin as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
