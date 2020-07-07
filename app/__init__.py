@@ -8,7 +8,7 @@ from flask_wtf.csrf import CSRFProtect
 from app.models import ArticleType, article_types, Source, \
     Comment, Article, Menu, BlogInfo, \
     Plugin, BlogView
-from app.shard import db, login_manager
+from app.shard import db, login_manager, cache, cache_config
 
 from config.config import Config
 
@@ -20,6 +20,8 @@ def create_app():
     app = Flask(__name__)
 
     log_slow_query(app)
+
+    enable_cache(app)
 
     template_context_handle_before_render(app)
 
@@ -59,7 +61,7 @@ def registry_routes(app):
     app.register_blueprint(main_blueprint)
 
     from .enums import enums as enum_blueprint
-    app.register_blueprint(enum_blueprint,url_prefix='/enum')
+    app.register_blueprint(enum_blueprint, url_prefix='/enum')
 
     from .admin import admin as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
@@ -107,3 +109,7 @@ def template_context_handle_before_render(app):
         #         params[k] = v
         # context['context'] = pickler.encode(params)
         # context['context'] = {}
+
+
+def enable_cache(app):
+    cache.init_app(app, cache_config)

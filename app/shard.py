@@ -9,6 +9,9 @@ import logging
 from functools import wraps
 from config.config import Config
 
+from functools import wraps
+from flask import request
+
 logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
 # logging.getLogger('sqlalchemy.dialects').setLevel(logging.DEBUG)
 # logging.getLogger('sqlalchemy.pool').setLevel(logging.DEBUG)
@@ -22,9 +25,19 @@ db = SQLAlchemy()
 
 
 def handle_template_render_exception(func):
-	@wraps(func)
-	def decorated_view(*args, **kwargs):
-		rendered_template = func(*args, **kwargs)
-		return rendered_template
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        rendered_template = func(*args, **kwargs)
+        return rendered_template
 
-	return decorated_view
+    return decorated_view
+
+from flask_caching import Cache
+
+cache = Cache()
+
+cache_config = {
+    "DEBUG": True,          # some Flask specific configs
+    "CACHE_TYPE": "simple", # Flask-Caching related configs
+    "CACHE_DEFAULT_TIMEOUT": 300
+}

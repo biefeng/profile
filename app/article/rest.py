@@ -75,7 +75,6 @@ def save_article():
 
 
 @article.route("/get", methods=["GET"])
-@login_required
 def get_article():
     ai = request.args.get("id")
     if ai is not None:

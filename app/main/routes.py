@@ -9,8 +9,11 @@ from . import main
 
 from config.menu import get_menu
 
+from app.shard import cache
+
 
 @main.route('/')
+@cache.cached(timeout=50)
 def index_new():
     return render_template('base/index.html', component='article/article_list.vue')
 
