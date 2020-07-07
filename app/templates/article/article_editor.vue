@@ -38,7 +38,7 @@
 {%endraw%}
 <!--<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>-->
 <link rel="stylesheet" href="{{url_for('static',filename='mavon-editor/index.css')}}">
-<script type="text/javascript" src="{{ url_for('static',filename='mavon-editor/mavon-editor.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/mavon-editor@2.9.0/dist/mavon-editor.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
 <script>
 
@@ -83,11 +83,11 @@
                     },
                     hljs_js: function () {
                         // 这是你的hljs文件路径
-                        return "{{url_for('static',filename='mavon-editor/highlight.min.js')}}";
+                        return "https://cdn.jsdelivr.net/npm/highlight.js@10.1.1/lib/index.min.js";
                     },
                     hljs_css: function (css) {
                         // 这是你的代码高亮配色文件路径
-                        return "{{url_for('static',filename='mavon-editor/railscasts.min.css')}}";
+                        return "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css";
                     },
                     hljs_lang: function (lang) {
                         // 这是你的代码高亮语言解析路径
