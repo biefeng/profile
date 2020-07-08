@@ -4,6 +4,9 @@
 # file_name : __init__.py.py
 
 from flask import Blueprint
+import logging
+
+LOGGER = logging.getLogger(__name__)
 
 article = Blueprint('article', __name__)
 

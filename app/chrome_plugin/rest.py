@@ -7,9 +7,11 @@ from jsonpickle import pickler
 
 from app.models import ChromePlugin
 from . import chrome_plugin
+from app.shard import cache_request_data
 
 
 @chrome_plugin.route("/list-data", methods=['GET'])
+@cache_request_data
 def chrome_plugin_list():
     page_size = request.args.get('pageSize', default=current_app.config['PLUGINS_PER_PAGE'])
     page_number = request.args.get('pageNumber', 0)

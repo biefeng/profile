@@ -3,7 +3,7 @@
 # date_time 2020/07/02 19:49
 # file_name : routes.py
 
-from flask import render_template
+from flask import render_template, redirect, url_for
 
 from . import main
 
@@ -15,7 +15,7 @@ from app.shard import cache
 @main.route('/')
 @cache.cached(timeout=50)
 def index_new():
-    return render_template('base/index.html', component='article/article_list.vue')
+    return redirect(url_for("article.article_list_view"))
 
 
 @main.route('/test')

@@ -12,15 +12,18 @@ import html
 from jsonpickle import pickler
 from app import db
 from app.models import Article
-from . import article
+from . import article, LOGGER
 
 import json
+from app.shard import cache, cache_request_data
 
 
 @article.route("/list-data", methods=['GET'])
+@cache_request_data
 def article_list():
     page_size = request.args.get('pageSize', 10)
     page_number = request.args.get('pageNumber', 0)
+
     query = Article.query
     source = request.args.get("source")
 
@@ -29,6 +32,10 @@ def article_list():
     category = request.args.get("category")
     if category is not None:
         query = query.filter(Article.articleType_id == category)
+    cache_key = "{0}-{1}-{2}-{3}".format(page_size, page_number, source, category)
+    cached_data = cache.get(cache_key)
+    if cached_data is not None:
+        return cached_data
     paginate = query.order_by(Article.create_time.desc()).paginate(int(page_number), per_page=int(page_size), error_out=True)
     items = paginate.items
     articles = []
@@ -42,6 +49,7 @@ def article_list():
         'total': paginate.total,
         'list': articles
     }
+    cache.set(cache_key, result, timeout=30)
 
     return Response(pickler.encode(result), status=200, mimetype="application/json")
 
