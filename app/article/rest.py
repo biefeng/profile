@@ -3,19 +3,17 @@
 # date_time 2020/07/02 23:06
 # file_name : rest.py
 
+import html
+
 from flask import Response, request
 from flask_login import login_required, current_user
 from jsonpickle import pickler
-from app.enums import ARTICLE_TYPE, DISPLAY_TYPE
-import html
 
-from jsonpickle import pickler
 from app import db
+from app.enums import ARTICLE_TYPE, DISPLAY_TYPE
 from app.models import Article
-from . import article, LOGGER
-
-import json
 from app.shard import cache, cache_request_data
+from . import article
 
 
 @article.route("/list-data", methods=['GET'])

@@ -4,8 +4,9 @@
 # file_name : routes.py
 from flask import render_template
 from flask_login import login_required
-from . import article
+
 from app.shard import cache
+from . import article
 
 
 @article.route("/list-view", methods=["GET"])
