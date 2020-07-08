@@ -5,8 +5,7 @@
         <a class="article-list_item-container" v-for="article in articles" :href="'/article/detail-view/'+article.id">
             <div class="article-list_item">
                 <div class="article-title">{{article.title}}</div>
-
-                <div style="margin: 5px 0px;display: flex;align-items: center;flex-wrap: wrap;">
+                <div class="info-label">
                     <div class="label-wrapper">
                         <span class="colorful-label primary">{{article.create_time}}</span>
                     </div>
@@ -124,17 +123,24 @@
     }
 
     .article-title {
-        color: #007bff;
+        color: #2910b5;
         cursor: default;
-        font-size: 1.5rem;
+        font-size: 1.3rem;
         padding: 5px 0px;
     }
 
     .article-summary {
-        font-size: 1rem;
+        font-size: .9rem;
         margin-bottom: 10px;
         word-break: break-all;
         color: gray
+    }
+
+    .info-label {
+        margin: 5px 0px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
     }
 
     .label-wrapper {
