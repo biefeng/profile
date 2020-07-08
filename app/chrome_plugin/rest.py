@@ -13,7 +13,7 @@ from . import chrome_plugin
 def chrome_plugin_list():
     page_size = request.args.get('pageSize', default=current_app.config['PLUGINS_PER_PAGE'])
     page_number = request.args.get('pageNumber', 0)
-    paginate = ChromePlugin.query.order_by(ChromePlugin.create_time.desc()).paginate(int(page_number), per_page=int(page_size), error_out=True)
+    paginate = ChromePlugin.query.order_by().paginate(int(page_number), per_page=int(page_size), error_out=True)
     items = paginate.items
     result = {
         'total': paginate.total,
