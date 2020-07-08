@@ -22,13 +22,13 @@
                     prop="name"
                     label="访问量"
                     width="120">
-                <template slot-scope="scope">{{ scope.row.num_of_view }}</template>
+                <template slot-scope="scope">{{ scope.row.num_of_viewed }}</template>
             </el-table-column>
             <el-table-column
                     prop="name"
                     label="下载量"
                     width="120">
-                <template slot-scope="scope">{{ scope.row.source }}</template>
+                <template slot-scope="scope">{{ scope.row.num_of_downloaded }}</template>
             </el-table-column>
             <el-table-column
                     prop="address"

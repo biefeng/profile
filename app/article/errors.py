@@ -1,6 +1,7 @@
-from flask import render_template, request, jsonify
-from . import article
+from flask import render_template
+
 from app.shard import handle_template_render_exception
+from . import article
 
 
 @article.app_errorhandler(403)

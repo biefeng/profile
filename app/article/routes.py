@@ -4,7 +4,13 @@
 # file_name : routes.py
 from flask import render_template
 from flask_login import login_required
+
 from . import article
+
+
+@article.route("/list-view", methods=["GET"])
+def article_list_view():
+    return render_template('base/index.html', component='article/article_list.vue')
 
 
 @article.route("/edit-view", methods=["GET"])

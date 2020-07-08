@@ -3,24 +3,25 @@
 # date_time 2020/07/02 23:06
 # file_name : rest.py
 
+import html
+
 from flask import Response, request
 from flask_login import login_required, current_user
 from jsonpickle import pickler
-from app.enums import ARTICLE_TYPE, DISPLAY_TYPE
-import html
 
-from jsonpickle import pickler
 from app import db
+from app.enums import ARTICLE_TYPE, DISPLAY_TYPE
 from app.models import Article
+from app.shard import cache, cache_request_data
 from . import article
-
-import json
 
 
 @article.route("/list-data", methods=['GET'])
+@cache_request_data
 def article_list():
     page_size = request.args.get('pageSize', 10)
     page_number = request.args.get('pageNumber', 0)
+
     query = Article.query
     source = request.args.get("source")
 
@@ -29,7 +30,11 @@ def article_list():
     category = request.args.get("category")
     if category is not None:
         query = query.filter(Article.articleType_id == category)
-    paginate = query.order_by(Article.create_time.desc()).paginate(int(page_number), per_page=int(page_size), error_out=True)
+    cache_key = "{0}-{1}-{2}-{3}".format(page_size, page_number, source, category)
+    cached_data = cache.get(cache_key)
+    if cached_data is not None:
+        return cached_data
+    paginate = query.paginate(int(page_number), per_page=int(page_size), error_out=True)
     items = paginate.items
     articles = []
     for item in items:
@@ -42,6 +47,7 @@ def article_list():
         'total': paginate.total,
         'list': articles
     }
+    cache.set(cache_key, result, timeout=30)
 
     return Response(pickler.encode(result), status=200, mimetype="application/json")
 
@@ -75,6 +81,7 @@ def save_article():
 
 
 @article.route("/get", methods=["GET"])
+@cache_request_data
 def get_article():
     ai = request.args.get("id")
     if ai is not None:
@@ -83,4 +90,5 @@ def get_article():
         if current_user.is_authenticated:
             return art.to_dict()
         else:
+            art.add_view(art, db)
             return {"content": art.content}

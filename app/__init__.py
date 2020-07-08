@@ -12,6 +12,10 @@ from app.shard import db, login_manager, cache, cache_config
 
 from config.config import Config
 
+import logging
+
+LOGGER = logging.getLogger(__name__)
+
 bootstrap = Bootstrap()
 moment = Moment()
 
@@ -84,8 +88,8 @@ def log_slow_query(app):
     def after_request(response):
         for query in get_debug_queries():
             if query.duration >= app.config['FLASKY_DB_QUERY_TIMEOUT']:
-                print('#####Slow query:%s \nParameters:%s \nDuration:%fs\nContext:%s\n #####' %
-                      (query.statement, query.parameters, query.duration, query.context))  # 打印超时sql执行信息
+                LOGGER.debug('#####Slow query:%s \nParameters:%s \nDuration:%fs\nContext:%s\n #####' %
+                             (query.statement % query.parameters, query.parameters, query.duration, query.context))  # 打印超时sql执行信息
         return response
 
     @app.teardown_request

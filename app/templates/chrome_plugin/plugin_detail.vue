@@ -11,9 +11,8 @@
         </div>
         <div class="plugin-detail-description">
             <div style="width: 100%;text-align: right;padding-right: 30px">
-                <a :href="plugin.crx_url">
-                    <el-button type="primary">下载</el-button>
-                </a>
+                <el-button @click="download(plugin.crx_url)" type="primary">下载</el-button>
+
             </div>
             <div style="white-space: pre-line;font-size: 16px;line-height: 24px;">
                 <div style="">{{ plugin.name }}</div>
@@ -42,8 +41,18 @@
         methods: {
             getDetail() {
                 this.$http.get("/chrome-plugin/detail-data/" + this.id).then(res => {
-                    console.log(res.data)
                     this.plugin = res.data
+                })
+            },
+            download(url, filename) {
+                let element = document.createElement("a");
+                element.href = url
+                // element.download = filename
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
+                this.$http.get("/download-count/" + this.id).then(res => {
+                    //
                 })
             }
         }
