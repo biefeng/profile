@@ -5,12 +5,10 @@
 from flask import render_template
 from flask_login import login_required
 
-from app.shard import cache
 from . import article
 
 
 @article.route("/list-view", methods=["GET"])
-@cache.cached()
 def article_list_view():
     return render_template('base/index.html', component='article/article_list.vue')
 

@@ -81,6 +81,7 @@ def save_article():
 
 
 @article.route("/get", methods=["GET"])
+@cache_request_data
 def get_article():
     ai = request.args.get("id")
     if ai is not None:
@@ -89,4 +90,5 @@ def get_article():
         if current_user.is_authenticated:
             return art.to_dict()
         else:
+            art.add_view(art, db)
             return {"content": art.content}

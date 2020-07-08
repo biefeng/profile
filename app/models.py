@@ -37,7 +37,7 @@ class BaseModel(db.Model):
         columns = self.get_table_columns()
         values = self.__dict__
         result = {}
-        for col in [c for c in columns if c not in exclude_cols]:
+        for col in [c for c in columns if c not in exclude_cols and c in values]:
             val = values[col]
             if isinstance(val, datetime):
                 val = str(val)
@@ -447,7 +447,7 @@ class BlogView(db.Model):
         db.session.commit()
 
 
-class ChromePlugin(db.Model):
+class ChromePlugin(BaseModel):
     __tablename__ = 'chrome_plugin'
     id = db.Column(db.Integer, primary_key=True)
     plugin_id = db.Column(db.String(128))
@@ -457,5 +457,20 @@ class ChromePlugin(db.Model):
     cover_image = db.Column(db.String(512))
     image_group = db.Column(db.Text)
     crx_url = db.Column(db.String(512))
+    num_of_viewed = db.Column(db.Integer)
+    category = db.Column(db.Integer)
+    num_of_downloaded = db.Column(db.Integer)
     create_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     update_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+    @staticmethod
+    def add_view(cp, db):
+        cp.num_of_viewed += 1
+        db.session.add(cp)
+        db.session.commit()
+
+    @staticmethod
+    def add_download(cp, db):
+        cp.num_of_downloaded += 1
+        db.session.add(cp)
+        db.session.commit()
