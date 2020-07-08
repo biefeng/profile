@@ -39,7 +39,7 @@
 <!--<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>-->
 <link rel="stylesheet" href="{{url_for('static',filename='mavon-editor/index.css')}}">
 <script src="https://cdn.jsdelivr.net/npm/mavon-editor@2.9.0/dist/mavon-editor.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css">
 <script>
 
     Vue.use(MavonEditor)

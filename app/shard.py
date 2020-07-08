@@ -29,45 +29,45 @@ LOGGER = logging.getLogger(__name__)
 
 
 def handle_template_render_exception(func):
-    @wraps(func)
-    def decorated_view(*args, **kwargs):
-        rendered_template = func(*args, **kwargs)
-        return rendered_template
+	@wraps(func)
+	def decorated_view(*args, **kwargs):
+		rendered_template = func(*args, **kwargs)
+		return rendered_template
 
-    return decorated_view
+	return decorated_view
 
 
 def cache_request_data(func):
-    """
-    缓存装饰器
-    :param func:
-    :return:
-    """
+	"""
+	缓存装饰器
+	:param func:
+	:return:
+	"""
 
-    @wraps(func)
-    def decorated_view(*args, **kwargs):
-        data = request.get_data()
-        request_args = request.args
+	@wraps(func)
+	def decorated_view(*args, **kwargs):
+		data = request.get_data()
+		request_args = request.args
 
-        cache_key = request.url
-        if data is not None:
-            cache_key += ("-" + str(data, encoding="utf-8"))
-            cache_key += ("-" + str(request_args))
-            cached_data = cache.get(cache_key)
-            if cached_data is not None:
-                LOGGER.debug("the data return from cache")
-                return cached_data
-        rendered_template = func(*args, **kwargs)
-        cache.set(cache_key, rendered_template)
-        return rendered_template
+		cache_key = request.url
+		if data is not None:
+			cache_key += ("-" + str(data, encoding="utf-8"))
+			cache_key += ("-" + str(request_args))
+			cached_data = cache.get(cache_key)
+			if cached_data is not None:
+				LOGGER.debug("the data return from cache")
+				return cached_data
+		rendered_template = func(*args, **kwargs)
+		cache.set(cache_key, rendered_template)
+		return rendered_template
 
-    return decorated_view
+	return decorated_view
 
 
 cache = Cache()
 
 cache_config = {
-    "DEBUG": True,  # some Flask specific configs
-    "CACHE_TYPE": "simple",  # Flask-Caching related configs
-    "CACHE_DEFAULT_TIMEOUT": 300
+	"DEBUG": True,  # some Flask specific configs
+	"CACHE_TYPE": "simple",  # Flask-Caching related configs
+	"CACHE_DEFAULT_TIMEOUT": 3600
 }
