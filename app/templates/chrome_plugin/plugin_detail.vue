@@ -41,7 +41,6 @@
         methods: {
             getDetail() {
                 this.$http.get("/chrome-plugin/detail-data/" + this.id).then(res => {
-                    console.log(res.data)
                     this.plugin = res.data
                 })
             },
@@ -52,7 +51,9 @@
                 document.body.appendChild(element);
                 element.click();
                 document.body.removeChild(element);
-
+                this.$http.get("/download-count/" + this.id).then(res => {
+                    //
+                })
             }
         }
     });

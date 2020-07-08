@@ -34,7 +34,7 @@ def article_list():
     cached_data = cache.get(cache_key)
     if cached_data is not None:
         return cached_data
-    paginate = query.order_by(Article.create_time.desc()).paginate(int(page_number), per_page=int(page_size), error_out=True)
+    paginate = query.paginate(int(page_number), per_page=int(page_size), error_out=True)
     items = paginate.items
     articles = []
     for item in items:
