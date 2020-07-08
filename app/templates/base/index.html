@@ -35,9 +35,16 @@
                 </el-header>
                 <el-container>
                     <el-main>
-                        <div class="main-content_container">
-                            <main-content></main-content>
-                        </div>
+
+                        <el-row>
+                            <el-col :lg="{span:18,offset:3}">
+                                <div class="grid-content bg-purple-light">
+                                    <div class="main-content_container">
+                                        <main-content></main-content>
+                                    </div>
+                                </div>
+                            </el-col>
+                        </el-row>
                     </el-main>
                 </el-container>
             </el-container>

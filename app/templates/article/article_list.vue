@@ -2,32 +2,57 @@
 <template id="article_list">
 
     <div class="article-list_container" v-loading="loading">
-        <a class="article-list_item-container" v-for="article in articles" :href="'/article/detail-view/'+article.id" >
+        <a class="article-list_item-container" v-for="article in articles" :href="'/article/detail-view/'+article.id">
             <div class="article-list_item">
                 <div class="article-title">{{article.title}}</div>
 
-                <div style="margin-bottom: 10px;">
-                    <div style="display: inline-block;">
-                    <span class="colorful-label primary">
-                        {{article.create_time}}
-                    </span>
-                        <span class="colorful-label warn">
-                        {{article.source}}
-                    </span>
-                        <span class="colorful-label info">
-                        未分类
-                    </span>
+                <div style="margin-bottom: 10px;display: flex;align-items: center;flex-wrap: wrap;">
+                    <div class="label-wrapper">
+                        <span class="colorful-label primary">{{article.create_time}}</span>
                     </div>
-                    <div style="float: right;display: inline-block;">
-                    <span class="colorful-label hot">
-                        浏览数{{article.num_of_view}}
-                    </span>
-                        <span class="colorful-label warn">
-                        评论189
-                    </span>
+                    <div class="label-wrapper">
+                        <span class="colorful-label warn">{{article.source}}</span>
                     </div>
+                    <div class="label-wrapper">
+                        <span class="colorful-label info">未分类</span>
+                    </div>
+                    <div class="label-wrapper">
+                        <span class="colorful-label hot">浏览数{{article.num_of_view}}</span>
+                    </div>
+                    <div class="label-wrapper">
+                        <span class="colorful-label warn">评论189</span>
+                    </div>
+
+
+                    <!--<el-row type="flex">
+                        <el-col :lg="3" :sm="3" :xs="8" :md="20">
+                            <span class="colorful-label primary">
+                                {{article.create_time}}
+                            </span>
+                        </el-col>
+                        <el-col :lg="3" :sm="20" :xs="3" :md="20">
+                            <span class="colorful-label warn">
+                                {{article.source}}
+                            </span>
+                        </el-col>
+                        <el-col :lg="3" :sm="20" :xs="3" :md="20">
+                            <span class="colorful-label info">
+                                未分类
+                            </span>
+                        </el-col>
+                        <el-col :lg="{span:3,offset:8}" :xs="{span:6}">
+                            <span class="colorful-label hot">
+                                浏览数{{article.num_of_view}}
+                            </span>
+                        </el-col>
+                        <el-col :lg="{span: 3,offset: 1}" :xs="{span:5}">
+                            <span class="colorful-label warn">
+                                评论189
+                            </span>
+                        </el-col>
+                    </el-row>-->
                 </div>
-                <div style="margin-bottom: 10px;">
+                <div class="article-summary">
                     {{ article.summary}}
                 </div>
             </div>
@@ -77,10 +102,11 @@
         text-align: left;
     }
 
-    .article-list_item-container{
+    .article-list_item-container {
         display: block;
     }
-    .article-list_item-container:visited{
+
+    .article-list_item-container:visited {
 
     }
 
@@ -105,6 +131,15 @@
         line-height: 2.8rem;
     }
 
+    .article-summary {
+        font-size: 1rem;
+        margin-bottom: 10px;
+        word-break: break-all;
+        color: gray
+    }
 
+    .label-wrapper {
+        padding: 2px 5px;
+    }
 </style>
 
