@@ -35,7 +35,7 @@ headers = {
 }
 
 today = datetime.date.today()
-date_prefix = "{0}-{1}-{2}".format(today.year, today.month,2)
+date_prefix = "{0}-{1}-{2}".format(today.year, today.month, today.day)
 
 base_word_dir = "D:\\Download\\chromePlugin\\"
 
@@ -63,7 +63,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 class ChromePluginSpider():
-    def __init__(self, url):
+    def __init__(self, url=None):
         self.url = url
         self._baidu_bos = BaiduBos(GENIOUS_BUCKET)
         self._import = Import("baiduyun", "blog_mini", "root", "Biefeng123!")
@@ -77,6 +77,12 @@ class ChromePluginSpider():
         response = requests.post(self.url, headers=headers, data=payload)
         data_str = response.text.encode("utf-8").replace(b"\n", b"")[4:].decode("utf-8").replace("null", "\"null\"")
         data = (json.loads(data_str))
+        self.handle_item_list_response(data)
+
+    def handle_item_list_response(self, data):
+        mark = data[0][1][0]
+        if mark != 'getitemsresponse':
+            return
         headers_exists = False
         if os.path.exists(download_csv_file):
             headers_exists = True
@@ -222,5 +228,5 @@ class ChromePluginSpider():
 if __name__ == '__main__':
     spider = ChromePluginSpider("https://chrome.google.com/webstore/ajax/item?hl=zh-CN&gl=JP&pv=20200420&mce=atf%2Cpii%2Crtr%2Crlb%2Cgtc%2Chcn%2Csvp%2Cwtd%2Chap%2Cnma%2Cdpb%2Car2%2Cc3d%2Cncr%2Cctm%2Cac%2Chot%2Cmac%2Cepb%2Cfcf%2Crma%2Cpot%2Cevt&requestedCounts=infiniteWall%3A96%3A0%3Afalse&token=featured%3A0%4010785749%3A7%3Afalse%2Cmcol%23top_picks_web-development%3A0%4010785750%3A11%3Atrue%2CinfiniteWall%3A0%4010785789%3A188%3Afalse&category=ext%2F11-web-development&_reqid=1012219&rt=j")
     # spider.get_plugins()
-    spider.upload_plugins()
+    # spider.upload_plugins()
     spider.import_into_mysql_ignore_exists()

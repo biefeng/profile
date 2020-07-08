@@ -21,6 +21,7 @@ from selenium import webdriver  # 导入库
 # browser.close()  # 关闭浏览器
 #
 import time, json
+from util.chrome_plugin_spider import ChromePluginSpider
 
 options = webdriver.ChromeOptions();
 print(options.arguments)
@@ -28,51 +29,49 @@ print(options.arguments)
 
 class SeleniumChromeSpider:
 
-	def __init__(self):
-		options = webdriver.ChromeOptions();
-		options.add_argument("--auto-open-devtools-for-tabs");
-		from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+    def __init__(self):
+        options = webdriver.ChromeOptions();
+        options.add_argument("--auto-open-devtools-for-tabs");
+        from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-		caps = DesiredCapabilities.CHROME
-		# as per latest docs
-		caps['goog:loggingPrefs'] = {'performance': 'ALL'}
-		self._browser = webdriver.Chrome(options=options, desired_capabilities=caps)
+        caps = DesiredCapabilities.CHROME
+        # as per latest docs
+        caps['goog:loggingPrefs'] = {'performance': 'ALL'}
+        self._browser = webdriver.Chrome(options=options, desired_capabilities=caps)
+        self._spider = ChromePluginSpider()
 
-	def crawl(self):
-		self._browser.get("https://chrome.google.com/webstore/category/ext/7-productivity?utm_source=chrome-ntp-icon")
-		print("------------------")
+    def crawl(self):
+        self._browser.get("https://chrome.google.com/webstore/category/ext/7-productivity?utm_source=chrome-ntp-icon")
+        while True:
+            time.sleep(3)
+            self._browser.execute_script("window.scrollBy(0, 5000);", {})
+            time.sleep(3)
+            for entry in self._browser.get_log('performance'):
 
-		with open("dddddddddddddddddd.txt", mode='w',encoding='utf-8') as f:
-			while True:
-				time.sleep(3)
-				self._browser.execute_script("window.scrollBy(0, 5000);", {})
+                try:
+                    data = json.loads(entry['message'])
+                    method_ = data['message']['method']
+                    if 'params' not in data['message']:
+                        continue
+                    params_ = data['message']['params']
+                    if 'type' in params_ and params_['type'] == 'XHR':
+                        if 'request' in params_:
+                            request_ = params_['request']
+                            url_ = request_['url']
+                            if url_.find("item") > 0:
+                                if 'requestId' in params_:
+                                    request_id_ = params_['requestId']
+                                    cdp_cmd = self._browser.execute_cdp_cmd("Network.getResponseBody", {'requestId': request_id_})
+                                    body_str = cdp_cmd['body'].replace('\n', '')[4:].replace("null", '"null"')
+                                    body = json.loads(body_str)
+                                    self._spider.handle_item_list_response(body)
+                except Exception as e:
+                    print(e)
+            break
 
-				for entry in self._browser.get_log('performance'):
-					data = json.loads(entry['message'])
-					method_ = data['message']['method']
-
-					if 'params' not in data['message']:
-						continue
-					params_ = data['message']['params']
-					if 'type' in params_ and params_['type'] == 'XHR':
-						f.write(method_ + "\r\n")
-						f.write(params_['type'] + "\r\n")
-						if 'request' in params_:
-							request_ = params_['request']
-							url_ = request_['url']
-							if url_.find("item") > 0:
-								f.write(url_)
-						if 'requestId' in params_:
-							request_id_ = params_['requestId']
-							cdp_cmd = self._browser.execute_cdp_cmd("Network.getResponseBody", {'requestId': request_id_})
-							f.write(cdp_cmd['body']+'\r\n')
-					f.flush()
-				# break
-
-
-# self._browser.close()
+        # self._browser.close()
 
 
 if __name__ == '__main__':
-	spider = SeleniumChromeSpider()
-	spider.crawl()
+    spider = SeleniumChromeSpider()
+    spider.crawl()
