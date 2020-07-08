@@ -6,7 +6,7 @@
             <div class="article-list_item">
                 <div class="article-title">{{article.title}}</div>
 
-                <div style="margin-bottom: 10px;display: flex;align-items: center;flex-wrap: wrap;">
+                <div style="margin: 5px 0px;display: flex;align-items: center;flex-wrap: wrap;">
                     <div class="label-wrapper">
                         <span class="colorful-label primary">{{article.create_time}}</span>
                     </div>
@@ -127,8 +127,7 @@
         color: #007bff;
         cursor: default;
         font-size: 1.5rem;
-        height: 2.8rem;
-        line-height: 2.8rem;
+        padding: 5px 0px;
     }
 
     .article-summary {
@@ -139,7 +138,7 @@
     }
 
     .label-wrapper {
-        padding: 2px 5px;
+        padding: 0px 5px;
     }
 </style>
 

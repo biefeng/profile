@@ -622,10 +622,8 @@
 }
 
 .colorful-label {
-    padding: 0px 5px;
+    padding: 1px 5px;
     border-radius: 3px;
-    height: 1.15rem;
-    line-height: 1.15rem;
     font-size: .6rem;
     display: inline-block;
 }
