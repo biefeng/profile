@@ -69,5 +69,5 @@ cache = Cache()
 cache_config = {
 	"DEBUG": True,  # some Flask specific configs
 	"CACHE_TYPE": "simple",  # Flask-Caching related configs
-	"CACHE_DEFAULT_TIMEOUT": 3600
+	"CACHE_DEFAULT_TIMEOUT": 300
 }
