@@ -17,7 +17,6 @@ from . import article
 
 
 @article.route("/list-data", methods=['GET'])
-@cache_request_data
 def article_list():
     page_size = request.args.get('pageSize', 10)
     page_number = request.args.get('pageNumber', 0)

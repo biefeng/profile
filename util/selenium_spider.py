@@ -26,6 +26,8 @@ from util.chrome_plugin_spider import ChromePluginSpider
 options = webdriver.ChromeOptions();
 print(options.arguments)
 
+from config import config
+
 
 class SeleniumChromeSpider:
 
@@ -42,10 +44,10 @@ class SeleniumChromeSpider:
 
 	def crawl(self):
 		self._browser.get("https://chrome.google.com/webstore/category/ext/7-productivity?utm_source=chrome-ntp-icon")
-		while True:
-			time.sleep(3)
+		for i in range(1000):
+			time.sleep(10)
 			self._browser.execute_script("window.scrollBy(0, 5000);", {})
-			time.sleep(3)
+			time.sleep(30)
 			for entry in self._browser.get_log('performance'):
 
 				try:
@@ -67,9 +69,10 @@ class SeleniumChromeSpider:
 									self._spider.handle_item_list_response(body)
 				except Exception as e:
 					print(e)
-			break
+					time.sleep(30)
+					continue
 
-		# self._browser.close()
+		self._browser.close()
 
 
 if __name__ == '__main__':
