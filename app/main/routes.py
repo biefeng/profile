@@ -22,3 +22,8 @@ def index_new():
 def test():
     print(get_menu())
     return render_template('base/index.html', component='test.vue', menu=get_menu(mode='horizontal'))
+
+
+@main.route("/baidu_verify_xii8wDagbI.html")
+def ddddddddd():
+    return render_template("baidu_verify_xii8wDagbI.html")

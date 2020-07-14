@@ -20,13 +20,15 @@ from selenium import webdriver  # 导入库
 # print(browser.page_source)  # 打印网页源代码
 # browser.close()  # 关闭浏览器
 #
-import time, json
+import time, json, logging
 from util.chrome_plugin_spider import ChromePluginSpider
 
 options = webdriver.ChromeOptions();
 print(options.arguments)
 
 from config import config
+
+LOGGER = logging.getLogger(__name__)
 
 
 class SeleniumChromeSpider:
@@ -45,6 +47,7 @@ class SeleniumChromeSpider:
 	def crawl(self):
 		self._browser.get("https://chrome.google.com/webstore/category/ext/7-productivity?utm_source=chrome-ntp-icon")
 		for i in range(1000):
+			LOGGER.info("selenium {0}".format(i))
 			time.sleep(10)
 			self._browser.execute_script("window.scrollBy(0, 5000);", {})
 			time.sleep(30)
@@ -68,8 +71,8 @@ class SeleniumChromeSpider:
 									body = json.loads(body_str)
 									self._spider.handle_item_list_response(body)
 				except Exception as e:
-					print(e)
-					time.sleep(30)
+					LOGGER.error(e)
+					time.sleep(300)
 					continue
 
 		self._browser.close()

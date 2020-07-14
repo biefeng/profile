@@ -35,8 +35,8 @@ headers = {
 }
 
 today = datetime.date.today()
-# date_prefix = "{0}-{1}-{2}".format(today.year, today.month, today.day)
-date_prefix = "{0}-{1}-{2}".format(today.year, today.month, 10)
+date_prefix = "{0}-{1}-{2}".format(today.year, today.month, today.day)
+# date_prefix = "{0}-{1}-{2}".format(today.year, today.month, 10)
 
 base_word_dir = "D:\\Download\\chromePlugin\\"
 
