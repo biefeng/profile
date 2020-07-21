@@ -18,11 +18,13 @@
             return {
                 message: "The is a sample component",
                 id: '{{id}}',
-                content: ''
+                content: '',
+                title: ''
             }
         },
         created() {
             this.loadArticle()
+            document.title = ''
         },
         methods: {
             loadArticle() {
@@ -31,8 +33,10 @@
                 }).then(res => {
                     if (res.data && res.data.content) {
                         this.content = res.data.content
+                        this.title = res.data.title
                     } else {
                         this.content = ""
+                        this.title = 'Not Found'
                     }
                 })
             }

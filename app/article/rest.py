@@ -90,4 +90,4 @@ def get_article():
             return art.to_dict()
         else:
             art.add_view(art, db)
-            return {"content": art.content}
+            return {"content": art.content, "title": art.title}
