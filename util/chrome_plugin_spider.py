@@ -77,7 +77,7 @@ class ChromePluginSpider():
     def __init__(self, url=None):
         self.url = url
         self._baidu_bos = BaiduBos(GENIOUS_BUCKET)
-        self._import = Import("baiduyun", "blog_mini", "root", "Biefeng123!")
+        self._import = None #Import("baiduyun", "blog_mini", "root", "Biefeng123!")
 
     def get_plugins(self):
         """
