@@ -45,16 +45,17 @@ date_prefix = "{0}-{1}-{2}".format(today.year, today.month, today.day)
 # date_prefix = "{0}-{1}-{2}".format(today.year, today.month, 10)
 
 system_name = platform.system()
-print(system_name)
+
 base_word_dir = "D:\\Download\\chromePlugin\\"
+plugin_cover_image_base_dir = base_word_dir + "image\\"
+plugin_crx_base_dir = base_word_dir + "crx\\"
 if 'Windows' != system_name:
     base_word_dir = "/home/root/chrome_plugin/"
+    plugin_cover_image_base_dir = base_word_dir + "image/"
 
+    plugin_crx_base_dir = base_word_dir + "crx/"
 # chrome_data_dir = "D:\\Download\\chromePlugin\\{0}\\".format(date_prefix)
 
-plugin_cover_image_base_dir = base_word_dir + "image\\"
-
-plugin_crx_base_dir = base_word_dir + "crx\\"
 
 download_csv_file = base_word_dir + "chrome_plugin_downloaded_{0}.csv".format(date_prefix)
 upload_csv_file = base_word_dir + "chrome_plugin_uploaded_{0}.csv".format(date_prefix)
@@ -77,7 +78,7 @@ class ChromePluginSpider():
     def __init__(self, url=None):
         self.url = url
         self._baidu_bos = BaiduBos(GENIOUS_BUCKET)
-        self._import = None #Import("baiduyun", "blog_mini", "root", "Biefeng123!")
+        self._import = None  # Import("baiduyun", "blog_mini", "root", "Biefeng123!")
 
     def get_plugins(self):
         """
