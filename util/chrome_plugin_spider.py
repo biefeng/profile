@@ -10,6 +10,8 @@ import json
 import logging
 import os
 
+import platform
+
 import requests
 
 from app.baidu_obs import BaiduBos, GENIOUS_BUCKET
@@ -20,7 +22,6 @@ from util.MysqlUtil import Import
 proxies = {'http': 'socks5://127.0.0.1:1080',
            'https': 'socks5://127.0.0.1:1080'
            }
-
 
 payload = "login=biefeng6%40gmail.com&f.req=%5B%5B%5B%22featured%22%2C7%2C10%2Cfalse%5D%2C%5B%22mcol%23top_picks_web-development%22%2C11%2C1%2Ctrue%5D%5D%2C%22ext%2F11-web-development%22%5D&t=AHUv8HGU0VSHaV2QDIGeZHkYIv362ngCXQ%3A1595388022735&"
 headers = {
@@ -43,7 +44,11 @@ today = datetime.date.today()
 date_prefix = "{0}-{1}-{2}".format(today.year, today.month, today.day)
 # date_prefix = "{0}-{1}-{2}".format(today.year, today.month, 10)
 
+system_name = platform.system()
+print(system_name)
 base_word_dir = "D:\\Download\\chromePlugin\\"
+if 'Windows' != system_name:
+    base_word_dir = "/home/root/chrome/plugin"
 
 # chrome_data_dir = "D:\\Download\\chromePlugin\\{0}\\".format(date_prefix)
 
@@ -93,7 +98,7 @@ class ChromePluginSpider():
         if os.path.exists(download_csv_file):
             headers_exists = True
         with open(download_csv_file, mode="a", encoding='utf-8') as sql_file:
-            writer = csv.DictWriter(sql_file, fieldnames=['plugin_id', 'name', 'short_desc', 'description', 'cover_image', 'crx_url','category'], delimiter=r" ")
+            writer = csv.DictWriter(sql_file, fieldnames=['plugin_id', 'name', 'short_desc', 'description', 'cover_image', 'crx_url', 'category'], delimiter=r" ")
             if not headers_exists:
                 writer.writeheader()
             plugins = data[0][1][1]
@@ -110,7 +115,7 @@ class ChromePluginSpider():
                     continue
                 detail_url = "https://chrome.google.com/webstore/ajax/detail?hl=zh-CN&gl=SG&pv=20200420&mce=atf%2Cpii%2Crtr%2Crlb%2Cgtc%2Chcn%2Csvp%2Cwtd%2Chap%2Cnma%2Cdpb%2Cc3d%2Cncr%2Cctm%2Cac%2Chot%2Cmac%2Cepb%2Cfcf%2Crma&id={0}&container=CHROME&_reqid=177793&rt=j".format(
                     plugin_id)
-                detail_res = requests.post(detail_url, data=payload,proxies=proxies)
+                detail_res = requests.post(detail_url, data=payload, proxies=proxies)
                 detail = json.loads(detail_res.text[4:])
                 # print(detail[0][1][1][1])
                 plugin_data = {
@@ -159,7 +164,7 @@ class ChromePluginSpider():
                     'Cookie': 'ANID=AHWqTUmhsPFfP5pos-5AqVvBZugFEgrv7YNCQp5C7Jzw9TYscKQTzUmn2EPpQC0D; SID=xwfxZdPhUjPqWljFqcHP5kZ4Mxka2cSG5cfcJajlt9UKj0gOKyvptdgSiIjGKy3o76ZP6g.; __Secure-3PSID=xwfxZdPhUjPqWljFqcHP5kZ4Mxka2cSG5cfcJajlt9UKj0gO1XuRH06_D4sLDu8Ls62hyw.; HSID=AXJ-3nljB9GXLEu6W; SSID=AeBSiWKGcAZ8adS51; APISID=ZeTbkaSeQFhQ-_ag/AloYOr7XCpCE5nLU-; SAPISID=-7I1uSrR_xJanry2/ATxMaK0_xiB60pHUV; __Secure-HSID=AXJ-3nljB9GXLEu6W; __Secure-SSID=AeBSiWKGcAZ8adS51; __Secure-APISID=ZeTbkaSeQFhQ-_ag/AloYOr7XCpCE5nLU-; __Secure-3PAPISID=-7I1uSrR_xJanry2/ATxMaK0_xiB60pHUV; SEARCH_SAMESITE=CgQI-I8B; NID=204=aO8ahavbzR4kfQLxTqCCBheqrJi6alg1CvwjC0qxSP0gY7yrAggb6R_fSuHTSRj7RxxopR2720qQhTjH3eiceWR_Q51Okhp3WD7tDgY_oLFWgxUSlu_ujM310s3TfBJeehnBuSX0qed2P5h914tBdG-W65lgwb_Vl33IJz42y5RlL25TGO4ViIyz-JnLmkoRAu-rAbJ9zl3Oj3TEIfdl-sv20M1LvGqcy4Jmp4GG; 1P_JAR=2020-6-15-7; SIDCC=AJi4QfFwFtK3YK1W4ZA2-MHUimwWsLBePsEJ4ytg_m2LxCXG7RfjFuIm3iinCGJeFUes-ixHI3M; SIDCC=AJi4QfGiX-IvK-ndyoj6oc-acrm030PE1PwQn_zdRu_8TYB5RKXSul_uR17kefmO3ShO8TJID3E'
                 }
                 # print(url)
-                response = requests.request("GET", url, headers=headers, data=payload,proxies=proxies)
+                response = requests.request("GET", url, headers=headers, data=payload, proxies=proxies)
                 crx_content = response.content
             else:
                 result[0] = True
@@ -169,7 +174,7 @@ class ChromePluginSpider():
             image_file_path = plugin_cover_image_base_dir + image_file_name
 
             if not os.path.exists(image_file_path):
-                img_res = requests.get(cover_image,proxies=proxies)
+                img_res = requests.get(cover_image, proxies=proxies)
                 cover_image_content = img_res.content
             else:
                 result[1] = True
