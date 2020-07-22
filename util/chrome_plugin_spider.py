@@ -91,6 +91,7 @@ class ChromePluginSpider():
         self.handle_item_list_response(data)
 
     def handle_item_list_response(self, data, category=0):
+        print("start handle")
         mark = data[0][1][0]
         if mark != 'getitemsresponse':
             return
