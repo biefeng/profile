@@ -42,6 +42,8 @@ class SeleniumChromeSpider:
         options = webdriver.ChromeOptions();
         options.add_argument("--auto-open-devtools-for-tabs")
         options.add_argument("--no-sandbox")
+        
+        options.add_argument('--headless')
         from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
         caps = DesiredCapabilities.CHROME
