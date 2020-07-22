@@ -3,12 +3,12 @@
 # date_time 2020/07/02 19:49
 # file_name : routes.py
 
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, make_response,current_app
 
 from . import main
-
+from datetime import datetime, timedelta
 from config.menu import get_menu
-
+from jsonpickle import pickler
 from app.shard import cache
 
 
@@ -16,6 +16,29 @@ from app.shard import cache
 @cache.cached(timeout=50)
 def index_new():
     return redirect(url_for("article.article_list_view"))
+
+
+@main.route('/xml', methods=['GET'])
+def sitemap():
+    try:
+        """Generate sitemap.xml. Makes a list of urls and date modified."""
+        pages = []
+        ten_days_ago = (datetime.now() - timedelta(days=7)).date().isoformat()
+        # static pages
+        for rule in current_app.url_map.iter_rules():
+            if "GET" in rule.methods and len(rule.arguments) == 0:
+                pages.append(
+                    ["http://pythonprogramming.net" + str(rule.rule), ten_days_ago]
+                )
+
+        # sitemap_xml = render_template('sitemap_template.xml', pages=pages)
+
+        response = make_response(pickler.encode(pages))
+        response.headers["Content-Type"] = "application/xml"
+
+        return response
+    except Exception as e:
+        return (str(e))
 
 
 @main.route('/test')

@@ -1,18 +1,17 @@
+import logging
+
 from flask import Flask, before_render_template
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
 from flask_moment import Moment
 from flask_sqlalchemy import get_debug_queries
 from flask_wtf.csrf import CSRFProtect
-
+from flask_sitemap import Sitemap
 from app.models import ArticleType, article_types, Source, \
     Comment, Article, Menu, BlogInfo, \
     Plugin, BlogView
 from app.shard import db, login_manager, cache, cache_config
-
 from config.config import Config
-
-import logging
 
 LOGGER = logging.getLogger(__name__)
 
@@ -22,7 +21,7 @@ moment = Moment()
 
 def create_app():
     app = Flask(__name__)
-
+    ext = Sitemap(app=app)
     log_slow_query(app)
 
     enable_cache(app)

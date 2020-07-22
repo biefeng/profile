@@ -27,14 +27,12 @@ class Config():
     SECRET_KEY = 'secret key to protect from csrf'
     WTF_CSRF_SECRET_KEY = 'random key for form'  # for csrf protection
 
-    FLASKY_DB_QUERY_TIMEOUT = 1
+    FLASKY_DB_QUERY_TIMEOUT = 1  # mysql slow query sql log
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_RECORD_QUERIES = False
     SQLALCHEMY_ECHO = True
 
-    SQLALCHEMY_ENGINE_OPTIONS = {
-        "charset": "utf8mb4"
-    }
+    SITEMAP_BLUEPRINT = 'flask_sitemap'  # Flask sitemap will registry blueprint if the value is True
 
     # Take good care of 'SECRET_KEY' and 'WTF_CSRF_SECRET_KEY', if you use the
     # bootstrap extension to create a form, it is Ok to use 'SECRET_KEY',
