@@ -4,7 +4,7 @@
 # time: 2020/07/07 23:20
 
 __author__ = '33504'
-
+"/usr/sbin/mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid"
 # browser = webdriver.Chrome()  # 声明浏览器
 # url = 'https:www.baidu.com'
 # browser.get(url)  # 打开浏览器预设网址

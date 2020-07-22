@@ -48,7 +48,7 @@ system_name = platform.system()
 print(system_name)
 base_word_dir = "D:\\Download\\chromePlugin\\"
 if 'Windows' != system_name:
-    base_word_dir = "/home/root/chrome/plugin"
+    base_word_dir = "/home/root/chrome_plugin/"
 
 # chrome_data_dir = "D:\\Download\\chromePlugin\\{0}\\".format(date_prefix)
 
