@@ -29,5 +29,10 @@ class DISPLAY_TYPE(Enum):
     公开 = 1
 
 
+class CHROME_PLUGIN_CATEGORY:
+    生产工具 = 0
+    开发者工具 = 1
+
+
 if __name__ == '__main__':
     print(ARTICLE_TYPE.get_name_by_val(1))
