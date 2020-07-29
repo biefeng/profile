@@ -30,6 +30,7 @@ def chrome_plugin_list():
 def chrome_plugin_detail(id):
     plugin = ChromePlugin.query.get_or_404(id)
     data = plugin.to_dict()
+    data['title'] = "Chrome插件-" + plugin.name
     plugin.add_view(plugin, db)
     return Response(pickler.encode(data), status=200, mimetype="application/json")
 

@@ -49,9 +49,11 @@
                     this.plugins = res.data.list
                     this.total = res.data.total
                     this.loading = false
-                }).catch(e => {
 
+                }).catch(e => {
                     this.loading = false
+                }).finally(() => {
+                    document.title = "Chrome 插件,Crx文件下载";
                 })
             },
             sizeChange(s) {

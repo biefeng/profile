@@ -24,7 +24,7 @@
         },
         created() {
             this.loadArticle()
-            document.title = ''
+
         },
         methods: {
             loadArticle() {
@@ -38,6 +38,7 @@
                         this.content = ""
                         this.title = 'Not Found'
                     }
+                    document.title = this.title
                 })
             }
         }
