@@ -1,37 +1,43 @@
 {% raw %}
 <template id="article_list">
 
-    <div class="article-list_container" v-loading="loading">
-        <a class="article-list_item-container" v-for="article in articles" :href="'/article/detail-view/'+article.id">
-            <div class="article-list_item">
-                <div class="article-title">{{article.title}}</div>
-                <div class="info-label">
-                    <div class="label-wrapper">
-                        <span class="colorful-label primary">{{article.create_time}}</span>
+    <div class="article-list_wrapper">
+        <div class="article-list_container" v-loading="loading">
+            <a class="article-list_item-container" v-for="article in articles"
+               :href="'/article/detail-view/'+article.id">
+                <div class="article-list_item">
+                    <div class="article-title">{{article.title}}</div>
+                    <div class="info-label">
+                        <div class="label-wrapper">
+                            <span class="colorful-label primary">{{article.create_time}}</span>
+                        </div>
+                        <div class="label-wrapper">
+                            <span class="colorful-label warn">{{article.source}}</span>
+                        </div>
+                        <div class="label-wrapper">
+                            <span class="colorful-label info">未分类</span>
+                        </div>
+                        <div class="label-wrapper">
+                            <span class="colorful-label hot">浏览数{{article.num_of_view}}</span>
+                        </div>
+                        <div class="label-wrapper">
+                            <span class="colorful-label warn">评论189</span>
+                        </div>
                     </div>
-                    <div class="label-wrapper">
-                        <span class="colorful-label warn">{{article.source}}</span>
-                    </div>
-                    <div class="label-wrapper">
-                        <span class="colorful-label info">未分类</span>
-                    </div>
-                    <div class="label-wrapper">
-                        <span class="colorful-label hot">浏览数{{article.num_of_view}}</span>
-                    </div>
-                    <div class="label-wrapper">
-                        <span class="colorful-label warn">评论189</span>
+                    <div class="article-summary">
+                        {{ article.summary}}
                     </div>
                 </div>
-                <div class="article-summary">
-                    {{ article.summary}}
-                </div>
+            </a>
+            <div>
+                <el-button>
+                    加载更多...
+                </el-button>
             </div>
-        </a>
-        <div>
-            <el-button>
-                加载更多...
-            </el-button>
+
+
         </div>
+        <el-backtop target=".article-list_container"></el-backtop>
     </div>
 </template>
 
@@ -72,6 +78,8 @@
     });
 </script>
 <style>
+   
+
     .article-list_container {
         padding: 15px;
         text-align: left;

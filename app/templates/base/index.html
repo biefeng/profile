@@ -12,8 +12,11 @@
                             </span>
                         </a>
                         <button class="menu-toggle" onclick="openMenu(this)">
-                            <svg t="1595944223876" height="30" style="vertical-align: text-bottom;" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1593">
-                                <path fill-rule="evenodd" d="M139.17297778 222.02342717a41.42522469 41.42522469 0 0 1 0-82.85044939h745.65404444a41.42522469 41.42522469 0 0 1 0 82.85044939z m0 248.55134814a41.42522469 41.42522469 0 0 1 0-82.85044939h745.65404444a41.42522469 41.42522469 0 0 1 0 82.85044939z m0 248.55134816a41.42522469 41.42522469 0 0 1 0-82.85044939h745.65404444a41.42522469 41.42522469 0 0 1 0 82.85044939z m0 248.55134814a41.42522469 41.42522469 0 0 1 0-82.85044939h745.65404444a41.42522469 41.42522469 0 0 1 0 82.85044939z" fill="#333303" p-id="1594"></path>
+                            <svg t="1595944223876" height="30" style="vertical-align: text-bottom;" class="icon"
+                                 viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1593">
+                                <path fill-rule="evenodd"
+                                      d="M139.17297778 222.02342717a41.42522469 41.42522469 0 0 1 0-82.85044939h745.65404444a41.42522469 41.42522469 0 0 1 0 82.85044939z m0 248.55134814a41.42522469 41.42522469 0 0 1 0-82.85044939h745.65404444a41.42522469 41.42522469 0 0 1 0 82.85044939z m0 248.55134816a41.42522469 41.42522469 0 0 1 0-82.85044939h745.65404444a41.42522469 41.42522469 0 0 1 0 82.85044939z m0 248.55134814a41.42522469 41.42522469 0 0 1 0-82.85044939h745.65404444a41.42522469 41.42522469 0 0 1 0 82.85044939z"
+                                      fill="#333303" p-id="1594"></path>
                             </svg>
                         </button>
                     </div>
@@ -77,17 +80,18 @@
 
                 <el-container>
                     <el-main>
-
-                        <el-row>
-                            <el-col :lg="{span:18,offset:3}" :xl="{span:18,offset:3}" :md="{span:20,offset:2}"
-                                    :sm="{span:24}">
-                                <div class="grid-content bg-purple-light">
-                                    <div class="main-content_container">
-                                        <main-content></main-content>
+                        <div class="main-content_wrapper">
+                            <el-row>
+                                <el-col :lg="{span:18,offset:3}" :xl="{span:18,offset:3}" :md="{span:20,offset:2}"
+                                        :sm="{span:24}">
+                                    <div class="grid-content bg-purple-light">
+                                        <div class="main-content_container">
+                                            <main-content></main-content>
+                                        </div>
                                     </div>
-                                </div>
-                            </el-col>
-                        </el-row>
+                                </el-col>
+                            </el-row>
+                        </div>
                     </el-main>
                 </el-container>
             </el-container>
@@ -137,6 +141,11 @@
 
         #app .el-scrollbar__wrap {
             overflow-x: hidden;
+        }
+
+        #app .main-content_wrapper{
+            height: 100vh;
+            overflow-y: scroll;
         }
 
         #app .main-content_container {
