@@ -42,7 +42,6 @@ def sitemap_xml():
 
 @main.route("/site.txt", methods=['GET'])
 def sitemap_txt():
-    raise Exception('ni')
     return current_app.send_static_file("site.txt")
 
 
