@@ -3,6 +3,9 @@
 # date_time 2020/07/20 18:04
 # file_name : baidu_seo.py
 
+import os
+from pathlib import Path
+
 import requests
 
 from util.MysqlUtil import Base
@@ -46,8 +49,20 @@ class CommonInclude:
         print(urls)
         return urls
 
+    def export_to_sitemap_txt(self):
+        urls = self.find_url()
+        join = "\n".join(urls)
+        path = Path(os.getcwd())
+        print(path.parent)
+        static_dir = os.path.join(str(path.parent), "app\\static")
+        with open(static_dir + "\\site.txt", mode="w", encoding="UTF-8") as site_txt:
+            site_txt.write(join)
+            site_txt.flush()
+
 
 # http://www.genup.top/article/list-view
 if __name__ == '__main__':
     include = CommonInclude(token='swafqFNPbTjekabY')
-    include.include()
+    # include.include()
+    include.export_to_sitemap_txt()
+
