@@ -29,7 +29,7 @@
                     </div>
                 </div>
             </a>
-            <div>
+            <div style="text-align: center;">
                 <el-button>
                     加载更多...
                 </el-button>
@@ -37,7 +37,7 @@
 
 
         </div>
-        <el-backtop target=".article-list_container"></el-backtop>
+        <el-backtop target=".el-scrollbar__wrap"></el-backtop>
     </div>
 </template>
 
