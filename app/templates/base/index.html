@@ -98,7 +98,10 @@
             </el-container>
         </template>
     </div>
-    {% include component ignore missing %}
+    {% if component  is defined %}
+        {% include component ignore missing %}
+    {% endif %}
+
     <script>
 
         new Vue({
@@ -162,12 +165,12 @@
 
         .menu {
             width: 100%;
-            background-color: #f8f8f8;
-            color: #777;
+            background-color: #343a40;
+            color: white;
         }
 
         .menu a {
-            color: #777;
+            color: white;
         }
 
 
