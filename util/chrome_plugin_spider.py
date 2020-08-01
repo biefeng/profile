@@ -9,7 +9,6 @@ import datetime
 import json
 import logging
 import os
-
 import platform
 
 import requests
@@ -41,7 +40,7 @@ headers = {
 }
 
 today = datetime.date.today()
-date_prefix = "{0}-{1}-{2}".format(today.year, today.month, 23)
+date_prefix = "{0}-{1}-{2}".format(today.year, today.month, today.day)
 # date_prefix = "{0}-{1}-{2}".format(today.year, today.month, 10)
 
 system_name = platform.system()
@@ -133,12 +132,14 @@ class ChromePluginSpider():
                 # print(plugin_data)
                 # 先校验是否已上传过，即在文件服务器重复，如果重复，代表已经下载过该插件并上传到文件服务器，跳过下载
 
-                result = self.download_plugin(plugin_id, name, cover_image)
+                result = self.download_plugin(plugin_id, name, cover_image, (False, False))
                 if result[0] and result[1]:
                     writer.writerow(plugin_data)
+                else:
+                    LOGGER.info("===============ignore the record===============")
                 LOGGER.info("===============download crx files and images===============end")
 
-    def download_plugin(self, plugin_id, name, cover_image):
+    def download_plugin(self, plugin_id, name, cover_image, ignore_strategy=(True, True)):
         try:
             result = [False, False]  # 0位代表crx下载状态 1位代表cover_image下载状态
             fn = name + crx_file_suffix
@@ -169,7 +170,7 @@ class ChromePluginSpider():
                 response = requests.request("GET", url, headers=headers, data=payload, proxies=proxies)
                 crx_content = response.content
             else:
-                result[0] = True
+                result[0] = True and ignore_strategy[0]
                 LOGGER.warning("{0} has already been downloaded ".format(fn))
 
             image_file_name = plugin_id + image_file_suffix
@@ -179,7 +180,7 @@ class ChromePluginSpider():
                 img_res = requests.get(cover_image, proxies=proxies)
                 cover_image_content = img_res.content
             else:
-                result[1] = True
+                result[1] = True and ignore_strategy[1]
                 LOGGER.warning("{0} has already been downloaded".format(image_file_name))
 
             if cover_image_content is not None:

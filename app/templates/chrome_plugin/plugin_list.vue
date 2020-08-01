@@ -2,6 +2,14 @@
 <template id="chrome-plugin-list">
     <div>
         <div role="grid" class="plugin-list-container" v-loading="loading">
+            <el-select v-model="category">
+                <el-option v-for="item in categories"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value">
+                </el-option>
+            </el-select>
+            <el-input v-model="searchKey" placeholder="" suffix-icon="el-icon-search"></el-input>
             <a :href="'/chrome-plugin/detail/'+plugin.id" v-for="plugin in plugins">
                 <div class="plugin-list-item">
                     <img aria-hidden="true"
@@ -30,7 +38,16 @@
                 plugins: [],
                 loading: false,
                 pageSize: 20,
-                total: 0
+                total: 0,
+                categories: [
+                    {
+                        label: '生产工具', value: 1
+                    }, {
+                        label: '开发者工具', value: 0
+                    }
+                ],
+                category: 0,
+                searchKey: ''
             }
         },
         created() {
