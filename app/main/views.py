@@ -24,6 +24,9 @@ def index():
     return render_template('index.html', articles=articles,
                            pagination=pagination, endpoint='.index')
 
+@main.route("/new")
+def new_index():
+    return render_template("new/base/base.html")
 
 @main.route('/article-types/<int:id>/')
 def articleTypes(id):
