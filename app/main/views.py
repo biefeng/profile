@@ -8,7 +8,7 @@ from . import main
 from .forms import CommentForm
 from .. import db
 from ..models import Article, ArticleType, Comment, \
-	Follow, User, Source, BlogView, ChromePlugin
+	Follow, User, Source, BlogView
 
 SYMBOL_MAP = {'&#34;': '"', '&#39;': "'", }
 
@@ -25,17 +25,36 @@ def index():
 	                       pagination=pagination, endpoint='.index')
 
 
-@main.route("/new")
+@main.route("/index")
 def new_index():
 	return render_template("new/index.html")
 
 
+@main.route("/about")
+def new_about():
+	return render_template("new/about.html")
+
+
+@main.route("/blog")
+def new_blog():
+	return render_template("new/blog.html")
+
+
+@main.route("/blog/details")
+def new_blog_detail():
+	return render_template("new/blog_details.html")
+
+
 @main.route("/assets/<path:name>")
-def send_assets(name):
+def send_index_assets(name):
 	assets_name = "assets/" + name
-	main.send_static_file(assets_name)
-	print(name)
-	return ""
+	return current_app.send_static_file(assets_name)
+
+
+@main.route("/blog/assets/<path:name>")
+def send_blog_assets(name):
+	assets_name = "assets/" + name
+	return current_app.send_static_file(assets_name)
 
 
 @main.route('/article-types/<int:id>/')
@@ -108,5 +127,5 @@ def articleDetails(id):
 	return render_template('article_detials.html', User=User, article=article,
 	                       comments=comments, pagination=pagination, page=page,
 	                       form=form, endpoint='.articleDetails', id=article.id)
-	# page=page, this is used to return the current page args to the
-	# disable comment or enable comment endpoint to pass it to the articleDetails endpoint
+# page=page, this is used to return the current page args to the
+# disable comment or enable comment endpoint to pass it to the articleDetails endpoint
