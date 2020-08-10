@@ -1,31 +1,64 @@
 {% raw %}
 <template id="chrome-plugin-list">
-    <div>
-        <div role="grid" class="plugin-list-container" v-loading="loading">
-            <el-select v-model="category">
-                <el-option v-for="item in categories"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value">
-                </el-option>
-            </el-select>
-            <el-input v-model="searchKey" placeholder="" suffix-icon="el-icon-search"></el-input>
-            <a :href="'/chrome-plugin/detail/'+plugin.id" v-for="plugin in plugins">
-                <div class="plugin-list-item">
-                    <img aria-hidden="true"
-                         :src="plugin.cover_image"
-                         class="plugin-list-item-cover-img">
-                    <div class="plugin-list-item-description">
-                        {{ plugin.short_desc }}
-                    </div>
-                    <div class="plugin-list-item-info">
-                        {{ plugin.name }}
-                    </div>
-                </div>
-            </a>
-            <pagination v-if="plugins.length>0" :total="total" :size_change="sizeChange" :current_change="list" :page_size="20"></pagination>
-        </div>
+    <div style="height: 100%;">
+        <div style="height: 100%;display: flex;align-items: stretch;">
+            <div style="background-color: #f0f0f0;border-right: 1px solid;">
+                <div style="width: 300px;padding: 20px;height: 100%;text-align: left;">
 
+                    <el-input v-model="searchKey" placeholder=""></el-input>
+                    <el-tabs v-model="contentType" stretch>
+                        <el-tab-pane label="扩展程序" name="first">
+                            类别
+                            <el-select style="width: 100%;margin-top: 20px;" v-model="category">
+                                <el-option v-for="item in categories"
+                                           :key="item.value"
+                                           :label="item.label"
+                                           :value="item.value">
+                                </el-option>
+                            </el-select>
+                            <div style="margin-top: 20px;font-size: 14px;">
+                                <span>下载排行>></span>
+                                <ul style="list-style: none;padding-left: 0;font-size: 18px;">
+                                    <li>1</li>
+                                    <li>2</li>
+                                    <li>3</li>
+                                </ul>
+                            </div>
+                            <div style="text-align: left;margin-top: 20px;font-size: 14px;">
+                                <span>为你推荐>></span>
+                                <ul style="list-style: none;padding-left: 0;font-size: 18px;">
+                                    <li>1</li>
+                                    <li>2</li>
+                                    <li>3</li>
+                                </ul>
+                            </div>
+                        </el-tab-pane>
+                        <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
+                    </el-tabs>
+
+                </div>
+            </div>
+            <div style="flex-grow: 6;">
+                <div class="plugin-list-container" v-loading="loading">
+                    <a :href="'/chrome-plugin/detail/'+plugin.id" v-for="plugin in plugins">
+                        <div class="plugin-list-item">
+                            <img aria-hidden="true"
+                                 :src="plugin.cover_image"
+                                 class="plugin-list-item-cover-img">
+                            <div class="plugin-list-item-description">
+                                {{ plugin.short_desc }}
+                            </div>
+                            <div class="plugin-list-item-info">
+                                {{ plugin.name }}
+                            </div>
+                        </div>
+                    </a>
+                    <pagination v-if="plugins.length>0" :total="total" :size_change="sizeChange" :current_change="list" :page_size="20"></pagination>
+                    <span v-else>没有数据</span>
+                </div>
+            </div>
+
+        </div>
     </div>
 </template>
 {% endraw %}
@@ -47,7 +80,8 @@
                     }
                 ],
                 category: 0,
-                searchKey: ''
+                searchKey: '',
+                contentType: "first"
             }
         },
         created() {
@@ -84,6 +118,7 @@
 
     .plugin-list-container {
         padding-right: 25px;
+        display: inline-block;
         background-color: #f0f0f0;
     }
 
