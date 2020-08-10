@@ -1,15 +1,16 @@
-from flask import Flask
+from flask import Flask, before_render_template
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
 from flask_moment import Moment
+from flask_sqlalchemy import get_debug_queries
 from flask_wtf.csrf import CSRFProtect
+from jsonpickle import pickler
 
 from app.models import ArticleType, article_types, Source, \
     Comment, Article, Menu, BlogInfo, \
     Plugin, BlogView
-from config.config import Config
-
 from app.shard import db, login_manager
+from config.config import Config
 
 bootstrap = Bootstrap()
 moment = Moment()
@@ -17,6 +18,29 @@ moment = Moment()
 
 def create_app():
     app = Flask(__name__)
+
+    @app.after_request
+    def after_request(response):
+        for query in get_debug_queries():
+            if query.duration >= app.config['FLASKY_DB_QUERY_TIMEOUT']:
+                print('#####Slow query:%s \nParameters:%s \nDuration:%fs\nContext:%s\n #####' %
+                      (query.statement, query.parameters, query.duration, query.context))  # 打印超时sql执行信息
+        return response
+
+    @app.teardown_request
+    def handle_teardown_request(ex):
+        pass
+
+    @before_render_template.connect_via(app)
+    def log_template_renders(sender, template, context, **extra):
+        template_globals = template.globals
+        params = {}
+        for k, v in context.items():
+            if k not in template_globals:
+                params[k] = v
+        # context['context'] = pickler.encode(params)
+        context['context'] = {}
+
     app.config.from_object(Config)
     Config.init_app(app)
     CSRFProtect(app)
@@ -57,3 +81,4 @@ def init_jinja_ctx(app):
     app.jinja_env.globals['Article'] = Article
     app.jinja_env.globals['Comment'] = Comment
     app.jinja_env.globals['BlogView'] = BlogView
+

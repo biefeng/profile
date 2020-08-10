@@ -9,10 +9,9 @@ import datetime
 import json
 import logging
 import os
-import tqdm
 
 import requests
-import config.config
+
 from app.baidu_obs import BaiduBos, GENIOUS_BUCKET
 from util.MysqlUtil import Import
 
@@ -36,7 +35,7 @@ headers = {
 }
 
 today = datetime.date.today()
-date_prefix = "{0}-{1}-{2}".format(today.year, today.month, 24)
+date_prefix = "{0}-{1}-{2}".format(today.year, today.month, today.day)
 
 base_word_dir = "D:\\Download\\chromePlugin\\"
 
@@ -69,7 +68,7 @@ class ChromePluginSpider():
         self._baidu_bos = BaiduBos(GENIOUS_BUCKET)
         self._import = Import("baiduyun", "blog_mini", "root", "Biefeng123!")
 
-    def get_plugins(self, igonre_exists):
+    def get_plugins(self):
         """
         :param igonre_exists: 是否忽略本地已存在的下载文件，如果忽略，将会记录在csv，后期插入数据库
         :return:
@@ -78,9 +77,13 @@ class ChromePluginSpider():
         response = requests.post(self.url, headers=headers, data=payload)
         data_str = response.text.encode("utf-8").replace(b"\n", b"")[4:].decode("utf-8").replace("null", "\"null\"")
         data = (json.loads(data_str))
+        headers_exists = False
+        if os.path.exists(download_csv_file):
+            headers_exists = True
         with open(download_csv_file, mode="a", encoding='utf-8') as sql_file:
             writer = csv.DictWriter(sql_file, fieldnames=['plugin_id', 'name', 'short_desc', 'description', 'cover_image', 'crx_url'], delimiter=r" ")
-            writer.writeheader()
+            if not headers_exists:
+                writer.writeheader()
             plugins = data[0][1][1]
             for i in plugins:
                 plugin_id = i[0]
@@ -115,7 +118,6 @@ class ChromePluginSpider():
                 if result[0] and result[1]:
                     writer.writerow(plugin_data)
                 LOGGER.info("===============download crx files and images===============end")
-                # download_crx(plugin_id, name)
 
     def download_plugin(self, plugin_id, name, cover_image):
         try:
@@ -179,9 +181,13 @@ class ChromePluginSpider():
     def upload_plugins(self):
         index = 1
         plugin_ids = set()
+        headers_exists = False
+        if os.path.isfile(upload_csv_file):
+            headers_exists = True
         with open(upload_csv_file, encoding='utf-8', mode='a') as uf:
             writer = csv.DictWriter(uf, fieldnames=['plugin_id', 'name', 'short_desc', 'description', 'cover_image', "crx_url"], delimiter=" ")
-            writer.writeheader()
+            if not headers_exists:
+                writer.writeheader()
             with open(download_csv_file, encoding='utf-8', mode='r') as df:
                 reader = csv.DictReader(df, delimiter=' ')
 
@@ -195,16 +201,26 @@ class ChromePluginSpider():
                     crx_upload_file_name = name + crx_file_suffix
                     cover_image_file_name = plugin_id + image_file_suffix
                     cover_image_file_path = plugin_cover_image_base_dir + cover_image_file_name
-                    crx_url = self._baidu_bos.upload_file(crx_local_file_path, baidu_bos_crx_key_prefix + crx_upload_file_name, True)
-                    cover_image_url = self._baidu_bos.upload_file(cover_image_file_path, baidu_bos_cover_image_key_prefix + cover_image_file_name, True)
-                    row['crx_url'] = crx_url
-                    row['cover_image'] = cover_image_url
-                    writer.writerow(row)
-                self._import.import_csv_ignore_exists_record(upload_csv_file, "chrome_plugin", ['plugin_id'])
-        print(index)
+                    try:
+                        crx_url = self._baidu_bos.upload_file(crx_local_file_path, baidu_bos_crx_key_prefix + crx_upload_file_name, True)
+                        cover_image_url = self._baidu_bos.upload_file(cover_image_file_path, baidu_bos_cover_image_key_prefix + cover_image_file_name, True)
+                        row['crx_url'] = crx_url
+                        row['cover_image'] = cover_image_url
+                        writer.writerow(row)
+                    except Exception as e:
+                        LOGGER.error(e)
+
+                # self._import.import_csv_update_exists_record(upload_csv_file, "chrome_plugin", ['plugin_id'])
+
+    def import_into_mysql_ignore_exists(self):
+        self._import.import_csv_ignore_exists_record(upload_csv_file, "chrome_plugin", ['plugin_id'])
+
+    def import_into_mysql_update_exists(self):
+        self._import.import_csv_update_exists_record(upload_csv_file, "chrome_plugin", ['plugin_id'])
 
 
 if __name__ == '__main__':
-    spider = ChromePluginSpider("https://chrome.google.com/webstore/ajax/item?hl=zh-CN&gl=JP&pv=20200420&mce=atf%2Cpii%2Crtr%2Crlb%2Cgtc%2Chcn%2Csvp%2Cwtd%2Chap%2Cnma%2Cdpb%2Cc3d%2Cncr%2Cctm%2Cac%2Chot%2Cmac%2Cepb%2Cfcf%2Crma%2Cpot%2Cevt&count=200&token=225@758604&category=extensions&sortBy=0&container=CHROME&features=5&_reqid=1340884&rt=j")
+    spider = ChromePluginSpider("https://chrome.google.com/webstore/ajax/item?hl=zh-CN&gl=JP&pv=20200420&mce=atf%2Cpii%2Crtr%2Crlb%2Cgtc%2Chcn%2Csvp%2Cwtd%2Chap%2Cnma%2Cdpb%2Car2%2Cc3d%2Cncr%2Cctm%2Cac%2Chot%2Cmac%2Cepb%2Cfcf%2Crma%2Cigb%2Cpot%2Cevt&count=200&token=28%405013323&category=extensions&sortBy=0&container=CHROME&features=5&_reqid=1906360&rt=j")
     # spider.get_plugins()
-    spider.upload_plugins()
+    # spider.upload_plugins()
+    spider.import_into_mysql_ignore_exists()

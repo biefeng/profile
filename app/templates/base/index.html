@@ -1,0 +1,82 @@
+{% extends 'base/foundation.html' %}
+
+{% block body %}
+    <div id="app">
+        <template>
+            <el-container style="height: 100%;">
+                <el-header>
+                    <el-menu
+                            :default-active="menuIndex"
+                            class="el-menu-demo"
+                            mode="horizontal"
+                            @select="handleSelect"
+                            background-color="#545c64"
+                            text-color="#fff"
+                            active-text-color="#ffd04b">
+                        <el-menu-item index="1">Flask</el-menu-item>
+                        <el-menu-item index="2">博客</el-menu-item>
+
+                        <el-menu-item index="3">
+                            <a style="height: 100%;" href="/chrome-plugin/list">
+                                <span>Chrome插件</span>
+                            </a>
+                        </el-menu-item>
+
+                    </el-menu>
+                </el-header>
+                <el-container>
+                    <el-main>
+                        <main-content></main-content>
+                    </el-main>
+                </el-container>
+            </el-container>
+        </template>
+    </div>
+    {% include component ignore missing %}
+    <script>
+
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    menuIndex: '3'
+                }
+            },
+            mounted() {
+                this.menuIndex = window.localStorage.getItem("menuIndex")
+            },
+            methods: {
+                handleSelect(key, keyPath) {
+                    window.localStorage.setItem("menuIndex", key)
+                }
+            }
+        })
+    </script>
+    <style>
+        body {
+            margin: 0px;
+            font-size: 16px;
+        }
+
+        a {
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        #app {
+            height: calc(100vh);
+        }
+
+        #app .el-header {
+            padding: 0px;
+        }
+
+        #app .el-main {
+            padding: 3px 0;
+        }
+
+        #app .el-scrollbar__wrap {
+            overflow-x: hidden;
+        }
+    </style>
+{% endblock %}

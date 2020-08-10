@@ -12,6 +12,7 @@
     height: auto;
     display: inline-block;
     margin-left: 25px;
+    align-self: flex-start;
     margin-top: 25px;
     width: 215px;
     color: #3c4043;
