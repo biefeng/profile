@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from flask_moment import Moment
 from flask_sqlalchemy import get_debug_queries
 from flask_wtf.csrf import CSRFProtect
+from flask_cors import CORS
 
 from app.models import ArticleType, article_types, Source, \
     Comment, Article, Menu, BlogInfo, \
@@ -40,6 +41,7 @@ def create_app():
     init_jinja_ctx(app)
     registry_routes(app)
     Migrate(app, db)
+    CORS(app, supports_credentials=True)
     return app
 
 
