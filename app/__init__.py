@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from flask_moment import Moment
 from flask_sqlalchemy import get_debug_queries
 from flask_wtf.csrf import CSRFProtect
+from flask_cors import CORS
 
 from app.models import ArticleType, article_types, Source, \
     Comment, Article, Menu, BlogInfo, \
@@ -30,7 +31,7 @@ def create_app():
 
     app.config.from_object(Config)
     Config.init_app(app)
-    CSRFProtect(app)
+    # CSRFProtect(app)
 
     db.init_app(app)
 
@@ -39,6 +40,7 @@ def create_app():
     login_manager.init_app(app)
     init_jinja_ctx(app)
     registry_routes(app)
+    CORS(app, supports_credentials=True)
     Migrate(app, db)
     return app
 
@@ -88,7 +90,8 @@ def log_slow_query(app):
         for query in get_debug_queries():
             if query.duration >= app.config['FLASKY_DB_QUERY_TIMEOUT']:
                 LOGGER.debug('#####Slow query:%s \nParameters:%s \nDuration:%fs\nContext:%s\n #####' %
-                             (query.statement % query.parameters, query.parameters, query.duration, query.context))  # 打印超时sql执行信息
+                             (query.statement % query.parameters, query.parameters, query.duration,
+                              query.context))  # 打印超时sql执行信息
         return response
 
     @app.teardown_request
