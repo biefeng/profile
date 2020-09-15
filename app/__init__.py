@@ -42,6 +42,7 @@ def create_app():
     registry_routes(app)
     CORS(app, supports_credentials=True)
     Migrate(app, db)
+    CORS(app, supports_credentials=True)
     return app
 
 
