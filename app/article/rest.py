@@ -7,6 +7,7 @@ import html
 
 from flask import Response, request
 from flask_login import login_required, current_user
+from flask_jwt import jwt_required, current_identity
 from jsonpickle import pickler
 
 from app import db
@@ -17,6 +18,7 @@ from . import article
 
 
 @article.route("/list-data", methods=['GET'])
+@jwt_required()
 def article_list():
     page_size = request.args.get('pageSize', 10)
     page_number = request.args.get('pageNumber', 0)
@@ -51,8 +53,8 @@ def article_list():
     return Response(pickler.encode(result), status=200, mimetype="application/json")
 
 
-@login_required
 @article.route("/del", methods=["POST"])
+@jwt_required()
 def del_article():
     request_data = request.json
     if request_data is None or request_data['ids'] is None:
@@ -63,8 +65,8 @@ def del_article():
     return {}
 
 
-@login_required
 @article.route("/save", methods=["POST"])
+@jwt_required()
 def save_article():
     request_data = request.json
     if request_data is None:
@@ -73,13 +75,16 @@ def save_article():
     if id_:
         Article.query.filter_by(id=id_).update(request_data)
     else:
-        art = Article(title=request_data['title'], content=html.escape(request_data['content']), summary=request_data['summary'], source_id=ARTICLE_TYPE.原创.value, articleType_id=1, content_md=request_data['content_md'])
+        art = Article(title=request_data['title'], content=html.escape(request_data['content']),
+                      summary=request_data['summary'], source_id=ARTICLE_TYPE.原创.value, articleType_id=1,
+                      content_md=request_data['content_md'])
         db.session.add(art)
     db.session.commit()
     return {}
 
 
 @article.route("/get", methods=["GET"])
+@jwt_required()
 @cache_request_data
 def get_article():
     ai = request.args.get("id")

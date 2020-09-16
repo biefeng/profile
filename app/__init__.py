@@ -7,10 +7,12 @@ from flask_moment import Moment
 from flask_sqlalchemy import get_debug_queries
 from flask_wtf.csrf import CSRFProtect
 from flask_cors import CORS
+from flask_jwt import JWT
+from werkzeug.security import safe_str_cmp
 
 from app.models import ArticleType, article_types, Source, \
     Comment, Article, Menu, BlogInfo, \
-    Plugin, BlogView
+    Plugin, BlogView, User
 from app.shard import db, login_manager, cache, cache_config
 from config.config import Config
 
@@ -22,47 +24,37 @@ moment = Moment()
 
 def create_app():
     app = Flask(__name__)
-
     log_slow_query(app)
-
     enable_cache(app)
-
-    template_context_handle_before_render(app)
-
     app.config.from_object(Config)
     Config.init_app(app)
     # CSRFProtect(app)
-
     db.init_app(app)
-
-    bootstrap.init_app(app)
     moment.init_app(app)
     login_manager.init_app(app)
-    init_jinja_ctx(app)
     registry_routes(app)
     CORS(app, supports_credentials=True)
     Migrate(app, db)
-    CORS(app, supports_credentials=True)
+    init_jwt(app)
     return app
 
 
-def init_jinja_ctx(app):
-    """
-        Global variables to jiajia2 environment:
-        :arg app
-    """
-    app.jinja_env.globals['ArticleType'] = ArticleType
-    app.jinja_env.globals['article_types'] = article_types
-    app.jinja_env.globals['Menu'] = Menu
-    app.jinja_env.globals['BlogInfo'] = BlogInfo
-    app.jinja_env.globals['Plugin'] = Plugin
-    app.jinja_env.globals['Source'] = Source
-    app.jinja_env.globals['Article'] = Article
-    app.jinja_env.globals['Comment'] = Comment
-    app.jinja_env.globals['BlogView'] = BlogView
+def init_jwt(app):
+    def authenticate(username, password):
+        user = User.query.filter_by(username=username).first()
+        if user and user.verify_password(password):
+            return user
+
+    def identify(payload):
+        identify_ = payload['identity']
+        return User.query.filter_by(id=identify_)
+
+    app.config['SECRET_KEY'] = 'super-secret'
+    JWT(app, authenticate, identify)
 
 
 def registry_routes(app):
+
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
