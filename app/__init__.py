@@ -1,6 +1,6 @@
 import logging
 
-from flask import Flask, before_render_template
+from flask import Flask, before_render_template, request
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
 from flask_moment import Moment
@@ -35,7 +35,8 @@ def create_app():
     registry_routes(app)
     CORS(app, supports_credentials=True)
     Migrate(app, db)
-    init_jwt(app)
+    jwt = init_jwt(app)
+    before_request(app, jwt)
     return app
 
 
@@ -49,12 +50,18 @@ def init_jwt(app):
         identify_ = payload['identity']
         return User.query.filter_by(id=identify_)
 
-    app.config['SECRET_KEY'] = 'super-secret'
-    JWT(app, authenticate, identify)
+    return JWT(app, authenticate, identify)
 
+
+def before_request(app, jwt):
+    def f1():
+        json = request.json
+        print(json, "================++++++++++++")
+
+    app.before_request(f1)
+    
 
 def registry_routes(app):
-
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 

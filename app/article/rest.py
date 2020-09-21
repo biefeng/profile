@@ -91,8 +91,5 @@ def get_article():
     if ai is not None:
         art = Article.query.get_or_404(ai)
         art.content = html.unescape(art.content)
-        if current_user.is_authenticated:
-            return art.to_dict()
-        else:
-            art.add_view(art, db)
-            return {"content": art.content, "title": art.title}
+        
+        return art.to_dict()
