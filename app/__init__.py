@@ -7,7 +7,8 @@ from flask_moment import Moment
 from flask_sqlalchemy import get_debug_queries
 from flask_wtf.csrf import CSRFProtect
 from flask_cors import CORS
-from flask_jwt import JWT
+from flask_jwt import JWT, _jwt
+from jwt import InvalidTokenError
 from werkzeug.security import safe_str_cmp
 
 from app.models import ArticleType, article_types, Source, \
@@ -36,7 +37,7 @@ def create_app():
     CORS(app, supports_credentials=True)
     Migrate(app, db)
     jwt = init_jwt(app)
-    before_request(app, jwt)
+    before_request(app)
     return app
 
 
@@ -48,18 +49,17 @@ def init_jwt(app):
 
     def identify(payload):
         identify_ = payload['identity']
-        return User.query.filter_by(id=identify_)
+        return User.query.filter_by(id=identify_).first()
 
     return JWT(app, authenticate, identify)
 
 
-def before_request(app, jwt):
+def before_request(app):
     def f1():
-        json = request.json
-        print(json, "================++++++++++++")
+        pass
 
     app.before_request(f1)
-    
+
 
 def registry_routes(app):
     from .main import main as main_blueprint

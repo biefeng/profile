@@ -1,5 +1,6 @@
 import os
 from logging.config import dictConfig
+from datetime import timedelta
 
 import yaml
 
@@ -33,7 +34,8 @@ class Config():
     SQLALCHEMY_ECHO = True
 
     SITEMAP_BLUEPRINT = 'flask_sitemap'  # Flask sitemap will registry blueprint if the value is True
-    
+
+    JWT_EXPIRATION_DELTA = timedelta(6000)
 
     # Take good care of 'SECRET_KEY' and 'WTF_CSRF_SECRET_KEY', if you use the
     # bootstrap extension to create a form, it is Ok to use 'SECRET_KEY',

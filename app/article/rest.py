@@ -13,7 +13,7 @@ from jsonpickle import pickler
 from app import db
 from app.enums import ARTICLE_TYPE, DISPLAY_TYPE
 from app.models import Article
-from app.shard import cache, cache_request_data
+from app.shard import cache, cache_request_data, authenticated_user
 from . import article
 
 
@@ -31,15 +31,12 @@ def article_list():
     category = request.args.get("category")
     if category is not None:
         query = query.filter(Article.articleType_id == category)
-    cache_key = "{0}-{1}-{2}-{3}".format(page_size, page_number, source, category)
-    cached_data = cache.get(cache_key)
-    if cached_data is not None:
-        return cached_data
+
     paginate = query.paginate(int(page_number), per_page=int(page_size), error_out=True)
     items = paginate.items
     articles = []
     for item in items:
-        if not current_user.is_authenticated and item.private == DISPLAY_TYPE.私密.value:
+        if authenticated_user is None and item.private == DISPLAY_TYPE.私密.value:
             continue
         art_dict = item.to_dict(['content', 'content_md'])
         art_dict['source'] = item.source.name
@@ -48,7 +45,6 @@ def article_list():
         'total': paginate.total,
         'list': articles
     }
-    cache.set(cache_key, result, timeout=30)
 
     return Response(pickler.encode(result), status=200, mimetype="application/json")
 
