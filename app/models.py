@@ -239,10 +239,11 @@ class Follow(db.Model):
                             primary_key=True)
 
 
-class Comment(db.Model):
+class Comment(BaseModel):
     __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text)
+    content_md = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     author_name = db.Column(db.String(64))
     author_email = db.Column(db.String(64))
