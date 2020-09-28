@@ -18,7 +18,6 @@ from . import article
 
 
 @article.route("/list-data", methods=['GET'])
-@jwt_required()
 def article_list():
     page_size = request.args.get('pageSize', 10)
     page_number = request.args.get('pageNumber', 0)
@@ -36,7 +35,7 @@ def article_list():
     items = paginate.items
     articles = []
     for item in items:
-        if authenticated_user is None and item.private == DISPLAY_TYPE.私密.value:
+        if not authenticated_user.is_auth() and item.private == DISPLAY_TYPE.私密.value:
             continue
         art_dict = item.to_dict(['content', 'content_md'])
         art_dict['source'] = item.source.name
@@ -80,7 +79,6 @@ def save_article():
 
 
 @article.route("/get", methods=["GET"])
-@jwt_required()
 def get_article():
     ai = request.args.get("id")
     if ai is not None:

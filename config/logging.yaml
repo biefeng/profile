@@ -19,4 +19,4 @@ handlers:
     backupCount: 30
 root:
   level: ERROR
-  handlers: [file,console]
+  handlers: [console]

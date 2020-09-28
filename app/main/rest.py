@@ -8,6 +8,7 @@ from jsonpickle import pickler
 from flask import jsonify
 from app.models import ArticleType
 from . import main
+from app.shard import authenticated_user
 
 
 @main.route("/article_type/list", methods=['GET'])
@@ -18,3 +19,10 @@ def article_type_list():
         record_to_dict = record.to_dict()
         result.append(record_to_dict)
     return jsonify(result)
+
+
+@main.route("/checkToken", methods=["POST"])
+def check_token():
+    if authenticated_user.is_auth():
+        return jsonify({"data": 1})
+    return jsonify({"data": 0})
