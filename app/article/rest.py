@@ -15,6 +15,7 @@ from app.enums import ARTICLE_TYPE, DISPLAY_TYPE
 from app.models import Article
 from app.shard import cache, cache_request_data, authenticated_user
 from . import article
+from app.utils import val_from_dict
 
 
 @article.route("/list-data", methods=['GET'])
@@ -55,24 +56,25 @@ def del_article():
     if request_data is None or request_data['ids'] is None:
         return {}
     for ai in request_data['ids']:
-        article = Article.query.get_or_404(ai)
-        db.session.delete(article)
+        _article = Article.query.get(ai)
+        if _article is not None:
+            db.session.delete(_article)
     return {}
 
 
 @article.route("/save", methods=["POST"])
 @jwt_required()
 def save_article():
-    request_data = request.json
+    request_data = request.get_json()
     if request_data is None:
         return
-    id_ = request_data['id']
+    id_ = request_data.get('id')
     if id_:
         Article.query.filter_by(id=id_).update(request_data)
     else:
-        art = Article(title=request_data['title'], content=html.escape(request_data['content']),
-                      summary=request_data['summary'], source_id=ARTICLE_TYPE.原创.value, articleType_id=1,
-                      content_md=request_data['content_md'])
+        art = Article(title=request_data.get('title'), content=html.escape(request_data.get('content')),
+                      summary=request_data.get('summary'), source_id=ARTICLE_TYPE.原创.value, articleType_id=1,
+                      content_md=request_data.get('content_md'))
         db.session.add(art)
     db.session.commit()
     return {}

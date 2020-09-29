@@ -42,6 +42,33 @@ def handle_template_render_exception(func):
     return decorated_view
 
 
+class AuthenticatedUser:
+    def __init__(self, identity=None):
+        self._identity = identity
+
+    def is_auth(self):
+        return self._identity is not None
+
+    def get_identity(self):
+        return self._identity
+
+
+def login_required():
+    token = _jwt.request_callback()
+    if token is not None:
+        try:
+            payload = _jwt.jwt_decode_callback(token)
+            identity = _jwt.identity_callback(payload)
+            if identity is not None:
+                return AuthenticatedUser(identity)
+        except InvalidTokenError as e:
+            logging.warning("Request with invalid token")
+    return AuthenticatedUser()
+
+
+authenticated_user = LocalProxy(login_required)
+
+
 def cache_request_data(func):
     """
     缓存装饰器
@@ -68,32 +95,6 @@ def cache_request_data(func):
 
     return decorated_view
 
-
-class AuthenticatedUser:
-    def __init__(self, identity=None):
-        self._identity = identity
-
-    def is_auth(self):
-        return self._identity is not None
-
-    def get_identity(self):
-        return self._identity
-
-
-def login_required():
-    token = _jwt.request_callback()
-    if token is not None:
-        try:
-            payload = _jwt.jwt_decode_callback(token)
-            identity = _jwt.identity_callback(payload)
-            if identity is not None:
-                return AuthenticatedUser(identity)
-        except InvalidTokenError as e:
-            logging.warning("Request with invalid token")
-    return AuthenticatedUser()
-
-
-authenticated_user = LocalProxy(login_required)
 
 cache = Cache()
 
