@@ -79,6 +79,7 @@ class AuthenticatedUser:
     def get_identity(self):
         return self._identity
 
+
 def login_required():
     token = _jwt.request_callback()
     if token is not None:

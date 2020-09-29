@@ -14,7 +14,7 @@ from . import comment
 def list_comments():
     article_id = request.args.get("article_id")
     _query = Comment.query
-    _list = _query.filter(Comment.article_id == article_id).all()
+    _list = _query.filter(Comment.article_id == article_id).order_by(Comment.timestamp.desc()).all()
     _result = [i.to_dict() for i in _list]
     return jsonify(_result)
 
