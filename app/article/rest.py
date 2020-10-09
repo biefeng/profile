@@ -42,7 +42,7 @@ def article_list():
             _tags = json.loads(item.tags)
             art_dict['tags'] = ARTICLE_TAGS.get_names_by_values(_tags)
         else:
-            art_dict['tags']=[]
+            art_dict['tags'] = []
 
         articles.append(art_dict)
     result = {
@@ -73,12 +73,13 @@ def save_article():
     if request_data is None:
         return
     id_ = request_data.get('id')
+    request_data['tags'] = json.dumps(request_data.get("tags"))
     if id_:
         Article.query.filter_by(id=id_).update(request_data)
     else:
         art = Article(title=request_data.get('title'), content=html.escape(request_data.get('content')),
                       summary=request_data.get('summary'), source_id=ARTICLE_TYPE.原创.value, articleType_id=1,
-                      content_md=request_data.get('content_md'))
+                      content_md=request_data.get('content_md'), tags=request_data.get("tags"))
         db.session.add(art)
     db.session.commit()
     return {}
