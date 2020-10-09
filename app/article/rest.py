@@ -3,19 +3,17 @@
 # date_time 2020/07/02 23:06
 # file_name : rest.py
 
-import html
+import html, json
 
 from flask import Response, request
-from flask_login import login_required, current_user
-from flask_jwt import jwt_required, current_identity
+from flask_jwt import jwt_required
 from jsonpickle import pickler
 
 from app import db
-from app.enums import ARTICLE_TYPE, DISPLAY_TYPE
+from app.enums import ARTICLE_TYPE, DISPLAY_TYPE, ARTICLE_TAGS
 from app.models import Article
-from app.shard import cache, cache_request_data, authenticated_user
+from app.shard import authenticated_user
 from . import article
-from app.utils import val_from_dict
 
 
 @article.route("/list-data", methods=['GET'])
@@ -40,6 +38,12 @@ def article_list():
             continue
         art_dict = item.to_dict(['content', 'content_md'])
         art_dict['source'] = item.source.name
+        if item.tags is not None:
+            _tags = json.loads(item.tags)
+            art_dict['tags'] = ARTICLE_TAGS.get_names_by_values(_tags)
+        else:
+            art_dict['tags']=[]
+
         articles.append(art_dict)
     result = {
         'total': paginate.total,
@@ -86,4 +90,5 @@ def get_article():
     if ai is not None:
         art = Article.query.get_or_404(ai)
         art.content = html.unescape(art.content)
+
         return art.to_dict()

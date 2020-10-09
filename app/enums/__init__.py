@@ -8,7 +8,7 @@ from flask import Blueprint
 
 enums = Blueprint('enum', __name__)
 
-from . import rest
+from app.enums import rest
 
 
 class ARTICLE_TYPE(Enum):
@@ -29,10 +29,31 @@ class DISPLAY_TYPE(Enum):
     公开 = 1
 
 
+class ARTICLE_TAGS(Enum):
+    Git = 0
+    Maven = 1
+    Java = 2
+    Python = 3
+    JavaScript = 4
+    Vue = 5
+    CSS = 6
+    HTML = 7
+    Spring = 8
+    SpringBoot = 9
+    Mybatis = 10
+    SpringMVC = 11
+
+    @staticmethod
+    def get_names_by_values(values):
+        if values is None:
+            return []
+        return [val.name for val in list(ARTICLE_TAGS) if val.value in values]
+
+
 class CHROME_PLUGIN_CATEGORY:
     生产工具 = 0
     开发者工具 = 1
 
 
 if __name__ == '__main__':
-    print(ARTICLE_TYPE.get_name_by_val(1))
+    print(ARTICLE_TAGS.get_names_by_values([1]))

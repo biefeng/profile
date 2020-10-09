@@ -348,6 +348,7 @@ class Article(BaseModel):
     articleType_id = db.Column(db.Integer, db.ForeignKey('articleTypes.id'))
     source_id = db.Column(db.Integer, db.ForeignKey('sources.id'))
     comments = db.relationship('Comment', backref='article', lazy='dynamic')
+    tags = db.Column(db.String(256))
 
     __setitem__ = object.__setattr__
     __getitem__ = object.__getattribute__
