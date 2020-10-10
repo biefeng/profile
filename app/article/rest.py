@@ -91,5 +91,4 @@ def get_article():
     if ai is not None:
         art = Article.query.get_or_404(ai)
         art.content = html.unescape(art.content)
-
         return art.to_dict()

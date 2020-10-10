@@ -42,12 +42,24 @@ class ARTICLE_TAGS(Enum):
     SpringBoot = 9
     Mybatis = 10
     SpringMVC = 11
+    Kafka = 12
+    Zookeeper = 13
+    ElasticSearch = 14
+    Mysql = 15
+    SQL = 16
+    Tomcat = 17
+    SSH = 18
 
     @staticmethod
     def get_names_by_values(values):
         if values is None:
             return []
-        return [val.name for val in list(ARTICLE_TAGS) if val.value in values]
+        _result = []
+        for val in list(ARTICLE_TAGS):
+            if val.value in values:
+                _result.append(val.name)
+        # return [val.name  if val.value in values]
+        return _result
 
 
 class CHROME_PLUGIN_CATEGORY:
