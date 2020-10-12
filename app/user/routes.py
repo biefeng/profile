@@ -5,15 +5,15 @@
 from flask import redirect, url_for, render_template
 from flask_login import login_required, logout_user
 
-from . import auth
+from . import user
 
 
-@auth.route('/login_view', methods=['GET', 'POST'])
+@user.route('/login_view', methods=['GET', 'POST'])
 def login_view():
     return render_template('base/login.html')
 
 
-@auth.route('/logout-view')
+@user.route('/logout-view')
 @login_required
 def logout_view():
     logout_user()

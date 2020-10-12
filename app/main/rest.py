@@ -28,15 +28,3 @@ def check_token():
         return jsonify({"data": 1})
     return jsonify({"data": 0})
 
-
-@main.route("/avatar", methods=["GET"])
-def gravatar(size=40, default='identicon', rating='g'):
-    # if request.is_secure:
-    #     url = 'https://secure.gravatar.com/avatar'
-    # else:
-    #     url = 'http://www.gravatar.com/avatar'
-    size = request.args.get("size", 18)
-    url = 'https://gravatar.loli.net/avatar'
-    _hash = hashlib.md5("BieFeNg".encode('utf-8')).hexdigest()
-    return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
-        url=url, hash=_hash, size=size, default=default, rating=rating)

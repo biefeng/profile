@@ -45,7 +45,7 @@ class BaseModel(db.Model):
         return result
 
 
-class User(UserMixin, db.Model):
+class User(UserMixin, BaseModel):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(64), unique=True, index=True)
