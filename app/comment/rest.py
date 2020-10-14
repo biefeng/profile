@@ -4,9 +4,9 @@
 # file_name : rest.py
 
 from flask import Response, request, jsonify
-
+from flask_jwt import jwt_required
 from app.models import Comment
-from app.shard import db
+from app.shard import db, BusinessException
 from . import comment
 
 
@@ -25,5 +25,17 @@ def save_comment():
     _comment = Comment(content=json_data['html'], content_md=json_data['html'],
                        article_id=json_data['article_id'])
     db.session.add(_comment)
+    db.session.commit()
+    return Response()
+
+
+@comment.route("/delete", methods=['POST'])
+@jwt_required()
+def delete_comment():
+    json_data = request.json
+    _com_id = json_data.get("id")
+    if _com_id is None:
+        raise BusinessException("评论不存在")
+    Comment.query.filter(Comment.id == _com_id).delete()
     db.session.commit()
     return Response()

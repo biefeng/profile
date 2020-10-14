@@ -14,7 +14,7 @@ from werkzeug.security import safe_str_cmp
 from app.models import ArticleType, article_types, Source, \
     Comment, Article, Menu, BlogInfo, \
     Plugin, BlogView, User
-from app.shard import db, login_manager, cache, cache_config
+from app.shard import db, login_manager, cache, cache_config, BusinessException
 from config.config import Config
 
 LOGGER = logging.getLogger(__name__)
@@ -38,6 +38,7 @@ def create_app():
     Migrate(app, db)
     jwt = init_jwt(app)
     before_request(app)
+    register_error_handle(app)
     return app
 
 
@@ -59,6 +60,16 @@ def before_request(app):
         pass
 
     app.before_request(f1)
+
+
+def register_error_handle(app):
+    def err_handle_func(_err):
+        return {
+                   "status": "-1",
+                   "message": _err.err_msg
+               }, 500
+
+    app.register_error_handler(BusinessException, err_handle_func)
 
 
 def registry_routes(app):

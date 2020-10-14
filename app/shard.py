@@ -54,6 +54,10 @@ class AuthenticatedUser:
 
 
 def login_required():
+    """
+    校验JWT token
+    :return:
+    """
     token = _jwt.request_callback()
     if token is not None:
         try:
@@ -66,6 +70,7 @@ def login_required():
     return AuthenticatedUser()
 
 
+# 当前登录用户代理
 authenticated_user = LocalProxy(login_required)
 
 
@@ -103,3 +108,8 @@ cache_config = {
     "CACHE_TYPE": "simple",  # Flask-Caching related configs
     "CACHE_DEFAULT_TIMEOUT": 300
 }
+
+
+class BusinessException(Exception):
+    def __init__(self, msg="服务异常!"):
+        self.err_msg = msg

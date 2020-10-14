@@ -67,5 +67,10 @@ class CHROME_PLUGIN_CATEGORY:
     开发者工具 = 1
 
 
+class BUSINESS_STATUS:
+    成功 = 1000
+    失败 = 1001
+
+
 if __name__ == '__main__':
     print(ARTICLE_TAGS.get_names_by_values([1]))
