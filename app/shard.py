@@ -8,6 +8,7 @@ from flask_login import LoginManager
 import logging
 from functools import wraps
 
+
 from jwt import InvalidTokenError
 
 from config.config import Config
@@ -29,6 +30,7 @@ login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login_view'
 
 db = SQLAlchemy()
+
 
 LOGGER = logging.getLogger(__name__)
 

@@ -476,3 +476,14 @@ class ChromePlugin(BaseModel):
         cp.num_of_downloaded += 1
         db.session.add(cp)
         db.session.commit()
+
+
+class Sentence(BaseModel):
+    __tablename__ = "sentence"
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String(256))
+    author = db.Column(db.String(128))
+    original_source = db.Column(db.String(128))
+    create_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    update_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+

@@ -9,6 +9,7 @@ from flask_wtf.csrf import CSRFProtect
 from flask_cors import CORS
 from flask_jwt import JWT, _jwt
 from jwt import InvalidTokenError
+from sqlalchemy import event
 from werkzeug.security import safe_str_cmp
 
 from app.models import ArticleType, article_types, Source, \
@@ -30,16 +31,27 @@ def create_app():
     app.config.from_object(Config)
     Config.init_app(app)
     # CSRFProtect(app)
-    db.init_app(app)
+    init_db(app)
+
     moment.init_app(app)
     login_manager.init_app(app)
     registry_routes(app)
     CORS(app, supports_credentials=True)
     Migrate(app, db)
-    jwt = init_jwt(app)
+    init_jwt(app)
     before_request(app)
     register_error_handle(app)
     return app
+
+
+def init_db(app):
+    db.init_app(app)
+
+    @event.listens_for(db.get_engine(app), 'after_cursor_execute')
+    def receive_after_cursor_execute(conn, cursor, statement, parameters, context, executemany):
+        logging.error("==============")
+        logging.error(statement % parameters)
+        logging.error("==============")
 
 
 def init_jwt(app):
@@ -90,6 +102,9 @@ def registry_routes(app):
 
     from .comment import comment as comment__blueprint
     app.register_blueprint(comment__blueprint, url_prefix='/comment')
+
+    from app.sentence import sentence as sentence__blueprint
+    app.register_blueprint(sentence__blueprint, url_prefix='/sentence')
 
     from .article import article as article_blueprint
     app.register_blueprint(article_blueprint, url_prefix='/article')
