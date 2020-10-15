@@ -22,8 +22,9 @@ def list_comments():
 @comment.route("/save", methods=['POST'])
 def save_comment():
     json_data = request.json
-    _comment = Comment(content=json_data['html'], content_md=json_data['html'],
-                       article_id=json_data['article_id'])
+    _comment = Comment(content=json_data['content'], content_md=json_data['content_md'],
+                       article_id=json_data['article_id'], avatar_hash=json_data.get("avatar_hash"),
+                       author_name=json_data.get("author_name"))
     db.session.add(_comment)
     db.session.commit()
     return Response()

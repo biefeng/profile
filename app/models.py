@@ -247,7 +247,7 @@ class Comment(BaseModel):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     author_name = db.Column(db.String(64))
     author_email = db.Column(db.String(64))
-    avatar_hash = db.Column(db.String(32))
+    avatar_hash = db.Column(db.String(128))
     article_id = db.Column(db.Integer, db.ForeignKey('articles.id'))
     disabled = db.Column(db.Boolean, default=False)
     comment_type = db.Column(db.String(64), default='comment')
