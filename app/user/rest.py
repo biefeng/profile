@@ -42,7 +42,7 @@ def github_access_token():
 
     if _code is not None:
         limit = 4
-        for o in limit:
+        for o in range(limit):
             try:
                 res = requests.post("https://github.com/login/oauth/access_token",
                                     headers={"Accept": "application/json"},
@@ -59,7 +59,7 @@ def github_access_token():
                 time.sleep(0.1)
                 break
 
-        for o in limit:
+        for o in range(limit):
             try:
                 if _access_token is not None:
                     res = requests.get("https://api.github.com/user",
