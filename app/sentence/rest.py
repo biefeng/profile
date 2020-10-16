@@ -5,7 +5,7 @@
 
 from flask import Response, request, jsonify
 from flask_jwt import jwt_required
-from app.models import Sentence
+from app.models import Sentence, Article
 from app.shard import db, BusinessException
 from app.sentence import sentence
 from random import random
@@ -28,11 +28,9 @@ def list_data():
     _page_size = request.args.get("pageSize", 10)
     _page_number = request.args.get("pageNumber", 1)
     _paginate = Sentence.query.paginate(int(_page_number), per_page=int(_page_size), error_out=True)
-    _item = _paginate.items
-
     _result = {
         'total': _paginate.total,
-        'list': [i.to_dict() for i in _item]
+        'list': [i.to_dict() for i in _paginate.items]
     }
     return jsonpickle.encode(_result, unpicklable=False, keys=True)
 
@@ -44,4 +42,14 @@ def save_data():
                   original_source=_json_data.get("original_source"))
     db.session.add(_s)
     db.session.commit()
-    return {},200
+    return {}, 200
+
+
+@sentence.route("/delete", methods=['DELETE'])
+def delete_data():
+    _id = request.args.get("id")
+    if _id is None:
+        return {}
+    Sentence.query.filter(Sentence.id == _id).delete()
+    db.session.commit()
+    return {}, 200
