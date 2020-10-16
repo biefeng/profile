@@ -47,6 +47,7 @@ def github_access_token():
         _access_token = res_json.get("access_token")
         if _access_token is not None:
             res = requests.get("https://api.github.com/user", headers={"Authorization": "token " + _access_token,
-                                                                       "Accept": "application/vnd.github.v3+json"})
+                                                                       "Accept": "application/vnd.github.v3+json",
+                                                                       'Connection': 'close'}, verify=False)
             return res.json()
         return res_json
