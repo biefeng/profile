@@ -34,5 +34,14 @@ def list_data():
         'total': _paginate.total,
         'list': [i.to_dict() for i in _item]
     }
-
     return jsonpickle.encode(_result, unpicklable=False, keys=True)
+
+
+@sentence.route("/save", methods=['POST'])
+def save_data():
+    _json_data = request.json
+    _s = Sentence(content=_json_data.get("content"), author=_json_data.get("author"),
+                  original_source=_json_data.get("original_source"))
+    db.session.add(_s)
+    db.session.commit()
+    return {},200
