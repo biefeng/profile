@@ -1,6 +1,13 @@
-import os
-import sys
+import jsonpickle
 
-filename, extension = os.path.splitext(os.path.basename(sys.argv[0]))
-print(sys.argv[0])
-print(filename, extension)
+
+class Animal:
+
+    def __init__(self, name, age):
+        self._name = name
+        self._age = age
+
+
+a = Animal("1", 1)
+
+print(jsonpickle.encode(a, unpicklable=False))
