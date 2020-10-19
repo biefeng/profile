@@ -40,7 +40,6 @@ def create_app():
     Migrate(app, db)
     init_jwt(app)
     before_request(app)
-    register_error_handle(app)
     return app
 
 
@@ -72,16 +71,6 @@ def before_request(app):
         pass
 
     app.before_request(f1)
-
-
-def register_error_handle(app):
-    def err_handle_func(_err):
-        return {
-                   "status": "-1",
-                   "message": _err.err_msg
-               }, 500
-
-    app.register_error_handler(BusinessException, err_handle_func)
 
 
 def registry_routes(app):
